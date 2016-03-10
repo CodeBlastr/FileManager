@@ -1,9 +1,9 @@
 <?php
-App::uses('FileStorageAppModel', 'FileStorage.Model');
+App::uses('FileManagerAppModel', 'FileManager.Model');
 /**
  * FileAttach
  */
-class FileAttach extends FileStorageAppModel {
+class FileAttach extends FileManagerAppModel {
 
 /**
  * Name
@@ -33,19 +33,19 @@ class FileAttach extends FileStorageAppModel {
  */
  	public $belongsTo = array(
 		'FileStorage' => array(
-			'className' => 'FileStorage.FileStorage',
+			'className' => 'FileManager.FileStorage',
 			'foreign_key' => 'file_storage_id'
 			),
 		'AudioStorage' => array(
-			'className' => 'FileStorage.AudioStorage',
+			'className' => 'FileManager.AudioStorage',
 			'foreign_key' => 'file_storage_id'
 			),
 		'ImageStorage' => array(
-			'className' => 'FileStorage.ImageStorage',
+			'className' => 'FileManager.ImageStorage',
 			'foreign_key' => 'file_storage_id'
 			),
 		'VideoStorage' => array(
-			'className' => 'FileStorage.VideoStorage',
+			'className' => 'FileManager.VideoStorage',
 			'foreign_key' => 'file_storage_id'
 			)
 		);

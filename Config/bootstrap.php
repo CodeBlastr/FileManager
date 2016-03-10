@@ -1,10 +1,9 @@
 <?php
-die('XXXXXXXX');
-require_once ROOT.DS.APP_DIR.DS.'Plugin'.DS.'FileStorage'.DS.'Vendor'.DS.'AWSsdk'.DS.'aws-autoloader.php';
-App::uses('S3StorageListener', 'FileStorage.Event');
-App::uses('FileStorageUtils', 'FileStorage.Lib/Utility');
-App::uses('StorageManager', 'FileStorage.Lib');
-App::uses('ImageProcessingListener', 'FileStorage.Event');
+require_once ROOT.DS.APP_DIR.DS.'Plugin'.DS.'FileManager'.DS.'Vendor'.DS.'AWSsdk'.DS.'aws-autoloader.php';
+App::uses('S3StorageListener', 'FileManager.Event');
+App::uses('FileStorageUtils', 'FileManager.Lib/Utility');
+App::uses('StorageManager', 'FileManager.Lib');
+App::uses('ImageProcessingListener', 'FileManager.Event');
 App::uses('CakeEventManager', 'Event');
 App::uses('ClassRegistry', 'Utility');
 CakePlugin::load(array('Imagine' => array('bootstrap' => true)));
@@ -18,7 +17,7 @@ CakeEventManager::instance()->attach($listener);
 
 Configure::write('Media', array(
 	// Configure the `basePath` for the Local adapter, not needed when not using it
-	//'basePath' => APP . 'FileStorage' . DS,
+	//'basePath' => APP . 'FileManager' . DS,
 	// Configure image versions on a per model base
 	'imageSizes' => array(
 		'ImageStorage' => array(
@@ -46,7 +45,7 @@ Configure::write('Media', array(
 ));
 
 // This is very important! The hashes are needed to calculate the image versions!
-ClassRegistry::init('FileStorage.ImageStorage')->generateHashes();
+ClassRegistry::init('FileManager.ImageStorage')->generateHashes();
 
 use Aws\S3;
 
@@ -71,3 +70,5 @@ if(isset($dataSource['aws'])) {
 			'class' => '\Gaufrette\Filesystem' 
 	) );
 }
+
+

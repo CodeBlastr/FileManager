@@ -15,7 +15,7 @@
 								$icon = "default-icon.png";
 						}
 					?>
-				  	<img src="/FileStorage/img/<?php echo $icon; ?>" />
+				  	<img src="/FileManager/img/<?php echo $icon; ?>" />
 				<?php endif; ?>
 			</div>
 			<p style="font-size: .8em; text-align:center; padding: 8px 0px; margin:0;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">

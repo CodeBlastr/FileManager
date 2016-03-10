@@ -1,5 +1,5 @@
 <?php
-App::uses('AbstractStorageEventListener', 'FileStorage.Event');
+App::uses('AbstractStorageEventListener', 'FileManager.Event');
 
 /**
  * S3StorageListener

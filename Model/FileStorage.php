@@ -1,10 +1,10 @@
 <?php
 App::uses('File', 'Utility');
 App::uses('Folder', 'Utility');
-App::uses('FileStorageAppModel', 'FileStorage.Model');
-App::uses('FileAttach', 'FileStorage.Model');
-App::uses('StorageManager', 'FileStorage.Lib');
-App::uses('FileStorageUtils', 'FileStorage.Utility');
+App::uses('FileStorageAppModel', 'FileManager.Model');
+App::uses('FileAttach', 'FileManager.Model');
+App::uses('StorageManager', 'FileManager.Lib');
+App::uses('FileStorageUtils', 'FileManager.Utility');
 /**
  * FileStorage
  *
@@ -12,7 +12,7 @@ App::uses('FileStorageUtils', 'FileStorage.Utility');
  * @copyright 2012 Florian Krämer
  * @license MIT
  */
-class FileStorage extends FileStorageAppModel {
+class FileStorage extends FileManagerAppModel {
 
 /**
  * Name
@@ -81,7 +81,7 @@ class FileStorage extends FileStorageAppModel {
 	);
 	
 	public $actsAs = array(
-			'FileStorage.UploadValidator' => array(
+			'FileManager.UploadValidator' => array(
 				'localFile' => true,
 				'validate' => false,
 //				'allowedExtensions' => array('pdf', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'odt', 'txt', 'zip', 'eot', 'csv', 'psd', 'ai', 'fla', 'eps', 'ppt', 'mp3', 'mov', 'mp4', 'swf', 'avi', 'wmv', 'flv', 'xml', 'swf')
@@ -96,7 +96,7 @@ class FileStorage extends FileStorageAppModel {
  */
  	public $hasMany = array(
 		'FileAttach' => array(
-			'className' => 'FileStorage.FileAttach',
+			'className' => 'FileManager.FileAttach',
 			'foreignKey' => 'file_storage_id',
 			'dependent' => true
 			)
@@ -109,8 +109,8 @@ class FileStorage extends FileStorageAppModel {
  * @return void
  */
 	public function configureUploadValidation($options) {
-		$this->Behaviors->unload('FileStorage.UploadValidator');
-		$this->Behaviors->load('FileStorage.UploadValidator', $options);
+		$this->Behaviors->unload('FileManager.UploadValidator');
+		$this->Behaviors->load('FileManager.UploadValidator', $options);
 	}
 
 /**

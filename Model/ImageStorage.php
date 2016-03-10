@@ -1,6 +1,6 @@
 <?php
-App::uses('FileStorage', 'FileStorage.Model');
-App::uses('FileAttach', 'FileStorage.Model');
+App::uses('FileStorage', 'FileManager.Model');
+App::uses('FileAttach', 'FileManager.Model');
 App::uses('Folder', 'Utility');
 /**
  * Image
@@ -35,7 +35,7 @@ class ImageStorage extends FileStorage {
  */
  	public $hasMany = array(
 		'FileAttach' => array(
-			'className' => 'FileStorage.FileAttach',
+			'className' => 'FileManager.FileAttach',
 			'foreignKey' => 'file_storage_id',
 			'dependent' => true
 			)
@@ -48,7 +48,7 @@ class ImageStorage extends FileStorage {
  */
 //	public $actsAs = array(
 //		'Imagine.Imagine',
-//		'FileStorage.UploadValidator' => array(
+//		'FileManager.UploadValidator' => array(
 //			'localFile' => true,
 //			'validate' => false,
 //			'allowedExtensions' => array('jpg', 'jpeg', 'png', 'gif')
@@ -59,7 +59,7 @@ class ImageStorage extends FileStorage {
 		parent::__construct($id, $table, $ds);
 		$this->actsAs = array(
 			'Imagine.Imagine',
-			'FileStorage.UploadValidator' => array(
+			'FileManager.UploadValidator' => array(
 				'localFile' => true,
 				'validate' => false,
 				'allowedExtensions' => array('jpg', 'jpeg', 'png', 'gif')

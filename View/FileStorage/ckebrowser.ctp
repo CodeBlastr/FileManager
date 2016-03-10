@@ -39,13 +39,13 @@
 					<div class="content active" id="fileBrowser">
 						<div class="panel">
 							<ul id="browserList" class="small-block-grid-6 medium-block-grid-8 large-block-grid-12" data-equalizer>
-	  							<?php echo $this->Element('FileStorage.media_list', array('media', $media)); ?>
+	  							<?php echo $this->Element('FileManager.media_list', array('media', $media)); ?>
 							</ul>
 						</div>
 					</div>
 					<div class="content" id="uploadPanel">
 						<div class="panel">
-							<?php echo $this->Element('FileStorage.upload_form'); ?>
+							<?php echo $this->Element('FileManager.upload_form'); ?>
 						</div>
 					</div>
 				</div>
@@ -112,7 +112,7 @@
 			$("#browserList").on('click', '.remove-media', function(e) {
 				if (confirm('Are you sure you want to delete this file?')) {
 					var id = $(this).data('id');
-					var url = "<?php echo $this->Html->url(array('plugin' => 'file_storage', 'controller' => 'file_storage', 'action' => 'delete')); ?>";
+					var url = "<?php echo $this->Html->url(array('plugin' => 'file_manager', 'controller' => 'file_storage', 'action' => 'delete')); ?>";
 					$.post(
 						url+"/"+id,
 						function(html) {
@@ -127,7 +127,7 @@
 
 			$('#FilterOptions').on('click', 'a', function(e) {
 				var type = $(this).data('type');
-				var url = "<?php echo $this->Html->url(array('plugin' => 'file_storage', 'controller' => 'file_storage', 'action' => 'browser')); ?>";
+				var url = "<?php echo $this->Html->url(array('plugin' => 'file_manager', 'controller' => 'file_storage', 'action' => 'browser')); ?>";
 				$.post(
 					url + "?type="+type,
 					function(html) {

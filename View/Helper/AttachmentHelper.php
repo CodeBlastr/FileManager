@@ -15,12 +15,12 @@ class AttachmentHelper extends AppHelper {
  */
 	public $helpers = array(
 		'Html',
-		'FileStorage.ImageStorage' => array('prefix' => 'https://s3.amazonaws.com/isby'),
-		'FileStorage.VideoStorage' => array('prefix' => 'https://s3.amazonaws.com/isby'),
-		'FileStorage.FileStorage' => array('prefix' => 'https://s3.amazonaws.com/isby')
+		'FileManager.ImageStorage' => array('prefix' => 'https://s3.amazonaws.com/testdevlocal'),
+		'FileManager.VideoStorage' => array('prefix' => 'https://s3.amazonaws.com/testdevlocal'),
+		'FileManager.FileStorage' => array('prefix' => 'https://s3.amazonaws.com/testdevlocal')
 	);
 	
-	public $prefix = 'https://s3.amazonaws.com/isby';
+	public $prefix = 'https://s3.amazonaws.com/testdevlocal';
 
 /**
  * Url method

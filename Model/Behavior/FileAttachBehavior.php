@@ -1,9 +1,9 @@
 <?php
-App::uses('FileStorage', 'FileStorage.Model');
-App::uses('FileAttach', 'FileStorage.Model');
-App::uses('AudioStorage', 'FileStorage.Model');
-App::uses('ImageStorage', 'FileStorage.Model');
-App::uses('VideoStorage', 'FileStorage.Model');
+App::uses('FileStorage', 'FileManager.Model');
+App::uses('FileAttach', 'FileManager.Model');
+App::uses('AudioStorage', 'FileManager.Model');
+App::uses('ImageStorage', 'FileManager.Model');
+App::uses('VideoStorage', 'FileManager.Model');
 //App::uses('Media', 'Media.Model');
 
 class FileAttachBehavior extends ModelBehavior {
@@ -122,12 +122,12 @@ class FileAttachBehavior extends ModelBehavior {
 		// handles many
 		for ($i=0; $i < count($results); $i++) {
 			if (!empty($results[$i]['FileStorage'])) {
-				$results[$i]['_FileStorage'] = Set::combine($results[$i], 'FileStorage.{n}.FileAttachment.code', 'FileStorage.{n}'); 
+				$results[$i]['_FileStorage'] = Set::combine($results[$i], 'FileManager.{n}.FileAttachment.code', 'FileManager.{n}'); 
 			}
 		}
 		// handles one
 		if (!empty($results['FileStorage'])) {
-			$results['_FileStorage'] = Set::combine($results, 'FileStorage.{n}.code', 'FileStorage.{n}'); 
+			$results['_FileStorage'] = Set::combine($results, 'FileManager.{n}.code', 'FileManager.{n}'); 
 		}
 		return $results;
 	}
@@ -141,7 +141,7 @@ class FileAttachBehavior extends ModelBehavior {
     	return array('hasAndBelongsToMany' => array(
         	'FileStorage' =>
             	array(
-                	'className' => 'FileStorage.FileStorage',
+                	'className' => 'FileManager.FileStorage',
                 	'joinTable' => 'file_attachments',
                 	'foreignKey' => 'foreign_key',
                 	'associationForeignKey' => 'file_storage_id',

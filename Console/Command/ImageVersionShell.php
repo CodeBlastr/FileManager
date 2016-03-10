@@ -32,7 +32,7 @@ class ImageVersionShell extends Shell {
  * @return void
  */
 	public function main() {
-		$storageModel = 'FileStorage.ImageStorage';
+		$storageModel = 'FileManager.ImageStorage';
 		if (isset($this->params['storageModel'])) {
 			$storageModel = $this->params['storageModel'];
 		}

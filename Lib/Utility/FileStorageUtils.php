@@ -15,7 +15,7 @@ class FileStorageUtils {
  * @return void
  */
 	public static function gaufretteLoader($class) {
-		$base = Configure::read('FileStorage.GaufretteLib');
+		$base = Configure::read('FileManager.GaufretteLib');
 		if (empty($base)) {
 			$base = CakePlugin::path('FileStorage') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
 		}
@@ -123,15 +123,15 @@ class FileStorageUtils {
 	public static function detectModelByFileType ($mime_type) {
 		if(empty($mime_type)) return false;
 		$ext = array_search($mime_type, self::getMimeTypes());
-		$models = App::objects('FileStorage.Model');
+		$models = App::objects('FileManager.Model');
 		foreach ($models as $model) {
 			$model = explode(".", $model);
 			$model = isset($model[1]) ? $model[1] : $model[0];
-			App::uses($model, 'FileStorage.Model');
+			App::uses($model, 'FileManager.Model');
 			$Model = new $model();
 			// mp4 is returning null, it should return VideoStorage (ImageStorage is working)
-			if(isset($Model->actsAs['FileStorage.UploadValidator']['allowedExtensions']) && !empty($Model->actsAs['FileStorage.UploadValidator']['allowedExtensions'])) {
-				if(array_search($ext, $Model->actsAs['FileStorage.UploadValidator']['allowedExtensions']) !== false) {
+			if(isset($Model->actsAs['FileManager.UploadValidator']['allowedExtensions']) && !empty($Model->actsAs['FileManager.UploadValidator']['allowedExtensions'])) {
+				if(array_search($ext, $Model->actsAs['FileManager.UploadValidator']['allowedExtensions']) !== false) {
 					return $model;
 				}
 			}

@@ -26,9 +26,9 @@ class FileStorageHelper extends AppHelper {
 		$url = $this->url($file, $options);
 		if ($url !== false) {
 			if ($file['mime_type'] === 'application/pdf') {
-				return $this->Html->image('/file_storage/img/pdf-icon.png', $options);
+				return $this->Html->image('/file_manager/img/pdf-icon.png', $options);
 			}
-			return $this->Html->image('/file_storage/img/doc-icon.png', $options);
+			return $this->Html->image('/file_manager/img/doc-icon.png', $options);
 		}
 		
 		return $this->fallbackImage($options, $file, $version);

@@ -41,7 +41,7 @@ class ImageProcessingListener extends Object implements CakeEventListener {
 			'ImageVersion.removeVersion' => 'removeVersions',
 			//'ImageStorage.afterSave' => 'afterSave',
 			//'ImageStorage.afterDelete' => 'afterDelete',
-			'FileStorage.ImageHelper.imagePath' => 'imagePath',
+			'FileManager.ImageHelper.imagePath' => 'imagePath',
 		);
 	}
 

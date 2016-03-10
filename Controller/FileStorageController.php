@@ -67,6 +67,11 @@ class FileStorageController extends FileManagerAppController {
 	}
 
 	public function browser() {
+
+		CakePlugin::loadAll(array(
+			'FileManager' => array('bootstrap' => true)
+		));
+		//exit('CCCCCCCC');
 		if(isset($this->request->query['CKEditor'])) {
 			$this->layout = false;
 			$this->view = 'ckebrowser';
@@ -143,7 +148,8 @@ class FileStorageController extends FileManagerAppController {
 			$data[$this->ImageStorage->alias]['adapter'] = 'S3Storage';
 //			$data['ImageStorage']['adapter'] = 'S3Storage';
 //			$data['VideoStorage']['adapter'] = 'S3Storage';
-//			debug($data);
+		Configure::write('debug', 2);
+		debug($data);
 			$model = $this->_detectModelByFileType($data['File']['file']['type']);
 			if ($model) {
 				$data['File']['model'] = $this->$model->alias;

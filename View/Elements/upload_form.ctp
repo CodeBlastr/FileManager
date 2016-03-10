@@ -1,4 +1,4 @@
-<?php echo $this->Form->create("File", array('type' => 'file', 'url' => array('plugin' => 'file_storage', 'controller' => 'file_storage', 'action' => 'upload'))); ?>
+<?php echo $this->Form->create("File", array('type' => 'file', 'url' => array('plugin' => 'file_manager', 'controller' => 'file_storage', 'action' => 'upload', '?'=>['debugger'=>2]))); ?>
 <fieldset>
 									<legend>Upload a File</legend>
 		<?php 

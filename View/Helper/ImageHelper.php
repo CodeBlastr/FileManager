@@ -66,7 +66,7 @@ class ImageHelper extends AppHelper {
 			$hash = null;
 		}
 		
-		$Event = new CakeEvent('FileStorage.ImageHelper.imagePath', $this, array(
+		$Event = new CakeEvent('FileManager.ImageHelper.imagePath', $this, array(
 				'hash' => $hash,
 				'image' => $image,
 				'version' => $version,
