@@ -123,7 +123,7 @@ class ImageStorage extends FileStorage {
 					'created' => $created,
 					'storage' => $this->getStorageAdapter($this->data[$this->alias]['adapter']),
 					'record' => $this->data));
-
+			debug($Event->data);
 			$this->getEventManager()->dispatch($Event);
 		}
 	}
