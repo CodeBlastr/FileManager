@@ -111,9 +111,9 @@ class FileHelper extends AppHelper {
  */
 	public function display($item, $options = array()) {
 		$this->options = array_merge($this->options, $options);
-		$item = isset($item['File']) ? $item['File'] : $item;
+		$item = isset($item['Myfile']) ? $item['Myfile'] : $item;
 		if ($this->getType($item)) {
-			$method = $this->type . 'File';
+			$method = $this->type . 'Myfile';
 			return $this->$method($item);
 		} else {
 			return $this->noImage();
@@ -128,10 +128,10 @@ class FileHelper extends AppHelper {
  */
 	public function thumb($item, $options = array()) {
 		$this->options = array_merge($this->options, $options);
-		$item = isset($item['File']) ? $item['File'] : $item;
+		$item = isset($item['Myfile']) ? $item['Myfile'] : $item;
 		if ($this->getType($item)) {
 			 // call thumb method if it exists, else get the standard pre-dating File function
-			$method = method_exists($this, $this->type . 'Thumb') ? $this->type . 'Thumb' : $this->type . 'File';
+			$method = method_exists($this, $this->type . 'Thumb') ? $this->type . 'Thumb' : $this->type . 'Myfile';
 			return $this->$method($item);
 		} else {
 			return $this->noImage();
@@ -141,7 +141,7 @@ class FileHelper extends AppHelper {
 	public function videoThumb($item) {
 		if ($item['extension'] == 'youtube') {
 			parse_str(parse_url($item['filename'], PHP_URL_QUERY), $vars);
-			return $this->_View->element('File.youtube_thumb_display', array(
+			return $this->_View->element('Myfile.youtube_thumb_display', array(
 				'youtubeId' => $vars['v'],
 				'id' => $item['id'],
 				'options' => $this->options
@@ -158,7 +158,7 @@ class FileHelper extends AppHelper {
  	public function find($type = 'first', $params = array()) {
 		App::uses('FileAttachment', 'FileManager.Model');
 		$FileAttachment = new FileAttachment;
-		// $params['contain'][] = 'File'; contain isn't working here, and I don't know why???? RK
+		// $params['contain'][] = 'Myfile'; contain isn't working here, and I don't know why???? RK
 		$attachments = $FileAttachment->find($type, $params);
 		if (!empty($attachments[0])) {
 			// $type = 'all'
@@ -167,9 +167,9 @@ class FileHelper extends AppHelper {
 			// $type = 'first'
 			$ids = $attachments['FileAttachment']['file_id'];
 		}
-		App::uses('File', 'File.Model');
-		$File = new File;
- 		return $File->find('all', array('conditions' => array('File.id' => $ids)));
+		App::uses('Myfile', 'Myfile.Model');
+		$Myfile = new Myfile;
+ 		return $Myfile->find('all', array('conditions' => array('Myfile.id' => $ids)));
  	}
 	
 /**
@@ -180,7 +180,7 @@ class FileHelper extends AppHelper {
  */
  	public function show(array $params, $options = array()) {
  		$file = $this->find('first', $params);
-		return $this->display($file[0]['File'], $options);
+		return $this->display($file[0]['Myfile'], $options);
  	}
 
 /**
@@ -197,10 +197,10 @@ class FileHelper extends AppHelper {
 			'class' => $this->options['class'] . ' file-image-thumb',
 		), $this->options);
 		
-		$extOptions = array('conversion' => $this->options['conversion'], 'quality' => 70, 'alt' => 'thumbnail', 'caller' => 'File');
+		$extOptions = array('conversion' => $this->options['conversion'], 'quality' => 70, 'alt' => 'thumbnail', 'caller' => 'Myfile');
 		$image = $this->Html->image($imagePath, $thumbImageOptions, $extOptions);
 		
-		return $this->_View->element('File.image_display', array(
+		return $this->_View->element('Myfile.image_display', array(
 			'image' => $image,
 			'class' => $this->options['class'],
 			'url' => $this->options['url'],
@@ -214,7 +214,7 @@ class FileHelper extends AppHelper {
  */
 	public function audioFile($item) {
 		$track = array($item['extension'] => $this->fileUrl . $this->type . '/' . $item['filename'] . '.' . $item['extension']);
-		return $this->_View->element('File.audio_display', array(
+		return $this->_View->element('Myfile.audio_display', array(
 			'tracks' => json_encode($track),
 			'class' => $this->options['class'],
 			'url' => $this->options['url'],
@@ -229,7 +229,7 @@ class FileHelper extends AppHelper {
  */
 	public function docsFile($item) {
 		$file = array($item['extension'] => $this->fileUrl . $this->type . '/' . $item['filename'] . '.' . $item['extension']);
-		return $this->_View->element('File.document_display', array_merge(array(
+		return $this->_View->element('Myfile.document_display', array_merge(array(
 			'class' => $this->options['class'],
 			'url' => $file[$item['extension']],
 			'id' => $item['id'],
@@ -245,7 +245,7 @@ class FileHelper extends AppHelper {
 		$tracks = array();
 		if (is_array($items)) {
 			foreach ($items as $item) {
-				$item = isset($item['File']) ? $item['File'] : $item;
+				$item = isset($item['Myfile']) ? $item['Myfile'] : $item;
 				$this->getType($item);
 				$track = array(
 					'title' => $item['title'],
@@ -257,7 +257,7 @@ class FileHelper extends AppHelper {
 		} else {
 			$this->audioFile($items);
 		}
-		return $this->_View->Element('File.jplayer_list', array(
+		return $this->_View->Element('Myfile.jplayer_list', array(
 			'tracks' => json_encode($tracks),
 			'class' => $this->options['class'],
 			'url' => $this->options['url'],
@@ -268,7 +268,7 @@ class FileHelper extends AppHelper {
 
 	public function videoFile($item, $options = array()) {
 		if ($item['extension'] === 'youtube') {
-			return $this->_View->element('File.youtube_display', array(
+			return $this->_View->element('Myfile.youtube_display', array(
 				'url' => $item['filename'],
 				'height' => $this->options['height'],
 				'width' => $this->options['width'],
@@ -276,7 +276,7 @@ class FileHelper extends AppHelper {
 				'id' => $this->options['id'],
 			));
 		}
-		return $this->_View->element('File.video_display', array(
+		return $this->_View->element('Myfile.video_display', array(
 			'url' => $this->streamUrl . '/' . $item['filename'] . '.' . $item['extension'],
 			'height' => $this->options['height'],
 			'width' => $this->options['width'],

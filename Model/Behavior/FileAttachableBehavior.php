@@ -1,6 +1,6 @@
 <?php
 App::uses('FileAttachment', 'FileManager.Model');
-App::uses('File', 'FileManager.Model');
+App::uses('Myfile', 'FileManager.Model');
 
 class FileAttachableBehavior extends ModelBehavior {
 
@@ -27,10 +27,10 @@ class FileAttachableBehavior extends ModelBehavior {
  * @return mixed False if the operation should abort. Any other result will continue.
  */
 	public function beforeSave(Model $Model, $options = array()) {
-		if (!empty($Model->data['File'])) { // do not make this ['File'][0]
+		if (!empty($Model->data['Myfile'])) { // do not make this ['Myfile'][0]
 			$File = new File();
 			$files = $File->upload($Model->data);
-			$ids = Set::extract('/id', $files['File']);
+			$ids = Set::extract('/id', $files['Myfile']);
 			foreach ($ids as $id) {
 				$Model->data['FileAttachment'][]['file_id'] = $id;
 			}
@@ -135,11 +135,11 @@ class FileAttachableBehavior extends ModelBehavior {
 		if(isset($query['file']) && !$query['file']) {
 			return $query;
 		}
-		if(empty($Model->hasAndBelongsToMany['File'])){
+		if(empty($Model->hasAndBelongsToMany['Myfile'])){
 			$Model->bindModel($this->_bindModel($Model),false);
 		}
 
-		$query['contain'][] = 'File';
+		$query['contain'][] = 'Myfile';
 		$query['contain'][] = 'FileThumbnail';
 		return $query;
 	}
@@ -157,12 +157,12 @@ class FileAttachableBehavior extends ModelBehavior {
 	public function afterFind(Model $Model, $results, $primary = false) {
 		// handles many
 		for ($i=0; $i < count($results); $i++) {
-			if (!empty($results[$i]['File'])) {
+			if (!empty($results[$i]['Myfile'])) {
 				$results[$i]['_File'] = Set::combine($results[$i], 'FileManager.{n}.code', 'FileManager.{n}'); 
 			}
 		}
 		// handles one
-		if (!empty($results['File'])) {
+		if (!empty($results['Myfile'])) {
 			$results['_File'] = Set::combine($results, 'FileManager.{n}.code', 'FileManager.{n}'); 
 		}
 		return $results;
@@ -175,9 +175,9 @@ class FileAttachableBehavior extends ModelBehavior {
  */
 	protected function _bindModel($Model){
     	return array('hasAndBelongsToMany' => array(
-        	'File' =>
+        	'Myfile' =>
             	array(
-                	'className' => 'FileManager.File',
+                	'className' => 'FileManager.Myfile',
                 	'joinTable' => 'file_attachments',
                 	'foreignKey' => 'foreign_key',
                 	'associationForeignKey' => 'file_id',
@@ -192,7 +192,7 @@ class FileAttachableBehavior extends ModelBehavior {
             	),
         	'FileThumbnail' =>
         		array(
-    				'className' => 'FileManager.File',
+    				'className' => 'FileManager.Myfile',
     				'joinTable' => 'file_attachments',
     				'foreignKey' => 'foreign_key',
     				'associationForeignKey' => 'file_id',

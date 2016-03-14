@@ -17,7 +17,7 @@ class FileStorageUtils {
 	public static function gaufretteLoader($class) {
 		$base = Configure::read('FileManager.GaufretteLib');
 		if (empty($base)) {
-			$base = CakePlugin::path('FileStorage') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
+			$base = CakePlugin::path('FileManager') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
 		}
 
 		$class = str_replace('\\', DS, $class);

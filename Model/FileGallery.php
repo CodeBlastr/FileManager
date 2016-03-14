@@ -53,23 +53,23 @@ class AppFileGallery extends FileManagerAppModel {
 		
 		// clone the File & Attach it
 		$i = 0;
-		foreach ($fileGallery['File'] as $file) {
+		foreach ($fileGallery['Myfile'] as $file) {
 			$originalId = $file['id'];
-			$this->File->create();
+			$this->Myfile->create();
 			$file['id'] = null;
 			$file['creator_id'] = $file['modifier_id'] = $file['user_id'] = $this->userId;
-			$this->File->save($file, array('callbacks' => false));
+			$this->Myfile->save($file, array('callbacks' => false));
 			// re-save the `content` with the correct ID.
-			$updatedContent = str_replace($originalId, $this->File->id, $file['content']);
-			$this->File->set('content', $updatedContent);
-			$this->File->save($file, array('callbacks' => false));
+			$updatedContent = str_replace($originalId, $this->Myfile->id, $file['content']);
+			$this->Myfile->set('content', $updatedContent);
+			$this->Myfile->save($file, array('callbacks' => false));
 			
-			$this->File->FileAttachment->create();
-			$this->File->FileAttachment->save(array(
+			$this->Myfile->FileAttachment->create();
+			$this->Myfile->FileAttachment->save(array(
 				'FileAttachment' => array(
 					'model' => 'FileGallery',
 					'foreign_key' => $this->id,
-					'file_id' => $this->File->id,
+					'file_id' => $this->Myfile->id,
 					'creator_id' => $this->userId,
 					'modifier_id' => $this->userId,
 					'order' => $i
@@ -82,7 +82,7 @@ class AppFileGallery extends FileManagerAppModel {
 	}
 
 /**
- * Generates a FileGallery with $options['File'] number of attached file
+ * Generates a FileGallery with $options['Myfile'] number of attached file
  */
 	public function generate($options) {
 		// create gallery
@@ -92,25 +92,25 @@ class AppFileGallery extends FileManagerAppModel {
 		$this->save($newGallery);
 		
 		// create a File row foreach page
-		$fileToGenerate = $options['File'];
+		$fileToGenerate = $options['Myfile'];
 		for ($i=0; $i < $fileToGenerate; $i++) {
-			$this->File->create();
-			$this->File->save(array(
-				'File' => array(
+			$this->Myfile->create();
+			$this->Myfile->save(array(
+				'Myfile' => array(
 					'filename' => '',
-					'model' => 'File'
+					'model' => 'Myfile'
 				)
 			), array('callbacks' => false));
 			if ($i === 0) {
 				// store the first page's id (File.order), so we can redirect them later
-				$firstFileId = $this->File->id;
+				$firstFileId = $this->Myfile->id;
 			}
-			$this->File->FileAttachment->create();
-			$this->File->FileAttachment->save(array(
+			$this->Myfile->FileAttachment->create();
+			$this->Myfile->FileAttachment->save(array(
 				'FileAttachment' => array(
 					'model' => 'FileGallery',
 					'foreign_key' => $this->id,
-					'file_id' => $this->File->id,
+					'file_id' => $this->Myfile->id,
 					'creator_id' => $this->userId,
 					'modifier_id' => $this->userId,
 					'order' => $i

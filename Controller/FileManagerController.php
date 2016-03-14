@@ -83,13 +83,13 @@ class AppFileManagerController extends FileManagerAppController {
 			if($this->Session->read('Auth.User.user_role_id') != 1) {
 				$conditions['conditions']['creator_id'] = $this->userId;
 			}
-			$files = $this->File->find('all', $conditions);
+			$files = $this->Myfile->find('all', $conditions);
 			
 			$this->request->data = array();
 			foreach($files as $f) {
-				$f['File']['type'] = $this->File->fileType($f['File']['extension']);
-				$f = $this->File->save($f, array('callbacks' => false));
-				$this->request->data[] = $f['File'];
+				$f['Myfile']['type'] = $this->Myfile->fileType($f['Myfile']['extension']);
+				$f = $this->Myfile->save($f, array('callbacks' => false));
+				$this->request->data[] = $f['Myfile'];
 			}
 			//debug($this->request->data);
 			if($this->request->is('ajax')) {
@@ -99,8 +99,8 @@ class AppFileManagerController extends FileManagerAppController {
 		}
 		
 		if($this->request->is('put')) {
-			$file['File'] = $this->request->data;
-			if($this->File->save($file, array('callbacks' => false))) {
+			$file['Myfile'] = $this->request->data;
+			if($this->Myfile->save($file, array('callbacks' => false))) {
 				$this->response->statusCode(200);
 			} else {
 				$this->response->statusCode(500);
@@ -108,17 +108,17 @@ class AppFileManagerController extends FileManagerAppController {
 		}
 		
 		if($this->request->is('delete')) {
-			$file = $this->File->findById($id);
-			if (in_array($file['File']['extension'], $this->File->uploadExclusionExtensions)) {
+			$file = $this->Myfile->findById($id);
+			if (in_array($file['Myfile']['extension'], $this->Myfile->uploadExclusionExtensions)) {
 				// some file are just links 
-				if(!$this->File->delete($id)) {
+				if(!$this->Myfile->delete($id)) {
 				   $this->response->statusCode(200);
 				}
 			} else {
-				$filename = $this->File->themeDirectory.DS.$file['File']['type'].DS.$file['File']['filename'].'.'.$file['File']['extension'];
+				$filename = $this->Myfile->themeDirectory.DS.$file['Myfile']['type'].DS.$file['Myfile']['filename'].'.'.$file['Myfile']['extension'];
 				$this->response->statusCode(200);
 				if(unlink($filename)) {
-					if(!$this->File->delete($id)) {
+					if(!$this->Myfile->delete($id)) {
 					   $this->response->statusCode(500);
 					}
 				} else {
@@ -139,18 +139,18 @@ class AppFileManagerController extends FileManagerAppController {
 				
 			$this->request->data['User']['id'] = $this->Auth->user('id');
 			$filearray = array();
-			foreach($this->request->data['File']['files'] as $file) {
-				$file['File'] = array(
+			foreach($this->request->data['Myfile']['files'] as $file) {
+				$file['Myfile'] = array(
 						'user_id' => $this->Auth->user('id'),
 						'filename' => $file,
 						'title' => is_array($file) ? $file['name'] : $file
 				);
-				$this->File->create();
-				$file = $this->File->upload($file);
+				$this->Myfile->create();
+				$file = $this->Myfile->upload($file);
 				if(isset($this->request->data['FileAttachment'])) {
 					$attachedfile = array(
 							'FileAttachment' => array(
-									'file_id' => $file['File']['id'],
+									'file_id' => $file['Myfile']['id'],
 									'model' => $this->request->data['FileAttachment']['model'],
 									'foreign_key' => $this->request->data['FileAttachment']['foreign_key'],
 							));
@@ -159,7 +159,7 @@ class AppFileManagerController extends FileManagerAppController {
 				}
 		
 				if($file) {
-					$filearray[] = $file['File'];
+					$filearray[] = $file['Myfile'];
 				}
 			}
 			$this->response->statusCode(200);

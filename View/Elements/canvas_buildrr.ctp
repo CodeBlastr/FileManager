@@ -45,9 +45,9 @@
 			$selecteditems = array();
 			if ( isset($media) && !empty($media) ) {
 				foreach ( $media as $m ) {
-					if ( isset($m['File']) ) {
-						$m['File']['selected'] = true;
-						$selecteditems[] = $m['File'];
+					if ( isset($m['Myfile']) ) {
+						$m['Myfile']['selected'] = true;
+						$selecteditems[] = $m['Myfile'];
 					} else {
 						$m['selected'] = true;
 						$selecteditems[] = $m;
@@ -182,7 +182,7 @@
 	var wrapperclass = '<?php echo $wrapperclass; ?>';
 	var selecteditems = <?php echo $selecteditems; ?>;
 	var baseUrl = '<?php echo $this->Html->url(array('plugin' => 'file_manager', 'controller' => 'file_manager', 'action' => 'file', '?'=>array('limit'=>50))); ?>';
-	var canvasData = <?php echo json_encode($this->request->data['File']['data']); ?>;
+	var canvasData = <?php echo json_encode($this->request->data['Myfile']['data']); ?>;
 </script>
 <script data-main="/FileManager/js/canvasBuildrr/canvasBuildrr-built.js" src="/FileManager/js/canvasBuildrr/require.js"></script>
 <!--<script data-main="/FileManager/js/canvasBuildrr/canvasBuildrr.js" src="/FileManager/js/canvasBuildrr/require.js"></script>-->

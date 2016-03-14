@@ -1,7 +1,7 @@
 <?php
 App::uses('File', 'Utility');
 App::uses('Folder', 'Utility');
-App::uses('FileStorageAppModel', 'FileManager.Model');
+App::uses('FileManagerAppModel', 'FileManager.Model');
 App::uses('FileAttach', 'FileManager.Model');
 App::uses('StorageManager', 'FileManager.Lib');
 App::uses('FileStorageUtils', 'FileManager.Utility');
@@ -125,13 +125,14 @@ class FileStorage extends FileManagerAppModel {
 			$this->data[$this->alias]['filesize'] = $File->size();
 			$this->data[$this->alias]['mime_type'] = $File->mime();
 		}
+		
 		if (!empty($this->data[$this->alias]['file']['name'])) {
 			$this->data[$this->alias]['extension'] = $this->fileExtension($this->data[$this->alias]['file']['name']);
 			$this->data[$this->alias]['filename'] = $this->data[$this->alias]['file']['name'];
 		}
 
 		if (empty($this->data[$this->alias]['adapter'])) {
-			$this->data[$this->alias]['adapter'] = 'S3Storage';
+			$this->data[$this->alias]['adapter'] = Configure::read('FileStorage.adapter');
 		}
 		
     	// Start Auto Creator & Modifier Id Saving

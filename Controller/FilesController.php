@@ -9,9 +9,9 @@
 class AppFilesController extends FileManagerAppController {
 
 	public $name = 'Files';
-	public $uses = 'FileManager.File';
+	public $uses = 'FileManager.Myfile';
 	public $allowedActions = array('index', 'view', 'notification', 'stream', 'my', 'add', 'edit', 'sorted', 'record');
-	public $helpers = array('FileManager.File');
+	public $helpers = array('FileManager.Myfile');
 
 
 /**
@@ -22,11 +22,11 @@ class AppFilesController extends FileManagerAppController {
 		if (isset($this->request->pass[0])) {
 			$fileType = $this->request->pass[0];
 		}
-		$allFiles = $this->File->find('all', array(
+		$allFiles = $this->Myfile->find('all', array(
 			'conditions' => array(
-				'File.filename !=' => '',
-				//'File.is_visible' => '1', // 0 = not on our server; 1 = good to go
-				'File.type' => $fileType
+				'Myfile.filename !=' => '',
+				//'Myfile.is_visible' => '1', // 0 = not on our server; 1 = good to go
+				'Myfile.type' => $fileType
 				)
 			));
 		$this->set('files', $allFiles);
@@ -37,7 +37,7 @@ class AppFilesController extends FileManagerAppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$file = $this->File->upload($this->request->data);
+			$file = $this->Myfile->upload($this->request->data);
 			if (!empty($file)) {
 				$this->Session->setFlash('File saved.', 'flash_success');
 				if ($this->request->isAjax()) {
@@ -58,12 +58,12 @@ class AppFilesController extends FileManagerAppController {
  * @param char $uid The UUID of the file in question.
  */
 	public function edit($uid = null) {
-    	$this->File->id = $uid;
+    	$this->Myfile->id = $uid;
 		if (empty($this->request->data)) {
-			$this->request->data = $this->File->findById($uid);
+			$this->request->data = $this->Myfile->findById($uid);
 		} else {
             // save the new file metadata
-            if ($this->File->save($this->request->data)) {
+            if ($this->Myfile->save($this->request->data)) {
                 $this->Session->setFlash('Your file has been updated.', 'flash_success');
                 $this->redirect($this->referer());
             }
@@ -73,22 +73,22 @@ class AppFilesController extends FileManagerAppController {
 
 	public function delete($id) {
 		try {
-			if (isset($id) && $this->File->exists($id)) {
+			if (isset($id) && $this->Myfile->exists($id)) {
 				//Get the file info so we can delete the file
-				$file = $this->File->findById($id);
-				$type = $this->File->fileType($file['File']['extension']);
+				$file = $this->Myfile->findById($id);
+				$type = $this->Myfile->fileType($file['Myfile']['extension']);
 				$this->loadModel('FileManager.FileAttachment');
 				//Delete the file don't cascade because we need better control over what get delete
-				if (!$this->File->delete($id, false)) {
+				if (!$this->Myfile->delete($id, false)) {
 					throw new Exception('Could not delete File Record');
 				}
 				if (!$this->FileAttachment->deleteAll(array('file_id' => $id))) {
 					throw new Exception('Could not delete attachment records');
 				}
-				if (!unlink($this->File->themeDirectory.DS.$type.DS.$file['File']['filename'].'.'.$file['File']['extension']) && $file['File']['extension'] !== 'youtube') {
+				if (!unlink($this->Myfile->themeDirectory.DS.$type.DS.$file['Myfile']['filename'].'.'.$file['Myfile']['extension']) && $file['Myfile']['extension'] !== 'youtube') {
 					throw new Exception('Could not delete file, please check permissions');
 				}
-				$this->Session->setFlash(__('Deleted %n', !empty($file['File']['title']) ? $file['File']['title'] : $id ), 'flash_success');
+				$this->Session->setFlash(__('Deleted %n', !empty($file['Myfile']['title']) ? $file['Myfile']['title'] : $id ), 'flash_success');
 			} else {
 				throw new MethodNotAllowedException('Action not allowed');
 			}
@@ -107,19 +107,19 @@ class AppFilesController extends FileManagerAppController {
 	public function view($fileID = null) {
 		if ($fileID) {
             // Increase the Views by 1
-            $this->File->updateAll(array('File.views'=>'File.views+1'), array('File.id'=>$fileID));
+            $this->Myfile->updateAll(array('Myfile.views'=>'Myfile.views+1'), array('Myfile.id'=>$fileID));
 
-			// Use this to save the Overall Rating to File.rating
-			$this->File->calculateRating($fileID, 'rating');
+			// Use this to save the Overall Rating to Myfile.rating
+			$this->Myfile->calculateRating($fileID, 'rating');
 
-			$theFiles = $this->File->find('first', array(
+			$theFiles = $this->Myfile->find('first', array(
 				'conditions' => array(
-                    'File.id' => $fileID
+                    'Myfile.id' => $fileID
                     ),
 				'contain' => 'User'
 				));
 
-			$this->pageTitle = $theFile['File']['title'];
+			$this->pageTitle = $theFile['Myfile']['title'];
 			$this->set('theFile', $theFile);
 		}
 	}
@@ -128,10 +128,10 @@ class AppFilesController extends FileManagerAppController {
 	public function my() {
 		$userID = ($this->Auth->user('id')) ? $this->Auth->user('id') : false;
 		if ($userID) {
-			$allFiles = $this->File->find('all', array(
+			$allFiles = $this->Myfile->find('all', array(
 				'conditions' => array(
-					'File.user_id' => $userID,
-					// 'File.type' => $fileType
+					'Myfile.user_id' => $userID,
+					// 'Myfile.type' => $fileType
 					)
 				));
 			$this->set('files', $allFiles);
@@ -155,18 +155,18 @@ class AppFilesController extends FileManagerAppController {
 			$ext = array_pop($filename);
 			$filename = implode('.', $filename);
 			// find the filetype
-			$file = $this->File->find('first', array(
+			$file = $this->Myfile->find('first', array(
 				'conditions' => array(
 					'filename' => $filename,
 					'extension' => $ext,
 				)
 			));
 			
-			$mime_type = $this->File->getMimeType($ext);
+			$mime_type = $this->Myfile->getMimeType($ext);
 			if(!$mime_type) {
 				throw new NotFoundException();
 			}
-			$file_dir = $this->File->themeDirectory .DS. $file['File']['type'].DS;
+			$file_dir = $this->Myfile->themeDirectory .DS. $file['Myfile']['type'].DS;
 			if(!file_exists($file_dir.$filename.'.'.$ext)) {
 				throw new NotFoundException();
 			}
@@ -240,14 +240,14 @@ class AppFilesController extends FileManagerAppController {
 	function sorted($fileType, $field, $sortOrder, $numberOfResults) {
 	    $options = array(
           'conditions' => array(
-		    'File.type' => strtolower($fileType),
-		    'File.is_visible' => '1'
+		    'Myfile.type' => strtolower($fileType),
+		    'Myfile.is_visible' => '1'
           ),
-          'order' => array('File.'.$field => $sortOrder),
+          'order' => array('Myfile.'.$field => $sortOrder),
           'limit' => $numberOfResults
 	    );
 
-	    return $this->File->find('all', $options);
+	    return $this->Myfile->find('all', $options);
 
 	}
 
@@ -255,15 +255,15 @@ class AppFilesController extends FileManagerAppController {
 /**
  * record video
  */
-	function record($model = 'File', $foreignKey = null) {
-		$this->set('uuid', $this->File->_generateUUID());
+	function record($model = 'Myfile', $foreignKey = null) {
+		$this->set('uuid', $this->Myfile->_generateUUID());
 		$this->set('model', $model);
 		$this->set('foreignKey', $foreignKey);
 
 		if(!empty($this->request->data)) {
-			if ($this->File->save($this->request->data)) {
+			if ($this->Myfile->save($this->request->data)) {
 				$this->Session->setFlash('File saved.');
-				#$this->redirect('/file_manager/files/edit/'.$this->File->id);
+				#$this->redirect('/file_manager/files/edit/'.$this->Myfile->id);
 				$this->redirect(array('action' => 'my'));
 			} else {
 				$this->Session->setFlash('Invalid Upload.');
@@ -300,14 +300,14 @@ class AppFilesController extends FileManagerAppController {
 		$this->set('galleries', $this->FilesGallery->find('list'));
 
 		if(!empty($galleryid)) {
-			$file = $this->FilesGallery->find('first', array('contain' => 'File', 'conditions' => array('id' => $galleryid)));
-			$file = $file['File'];
+			$file = $this->FilesGallery->find('first', array('contain' => 'Myfile', 'conditions' => array('id' => $galleryid)));
+			$file = $file['Myfile'];
 		}else {
 			$multiple = isset($this->request->data['mulitple']) ? $this->request->data['mulitple'] : true;
 			if($uid == null) {
-				$files = $this->File->find('all');
+				$files = $this->Myfile->find('all');
 			}else{
-				$files = $this->File->find('all', array('conditions' => array('creator_id' => $uid)));
+				$files = $this->Myfile->find('all', array('conditions' => array('creator_id' => $uid)));
 			}
 		}
 
@@ -403,7 +403,7 @@ class AppFilesController extends FileManagerAppController {
     	if(empty($id)) {
     		return false;
     	}else {
-    		$file = $this->File->read(array('filename', 'extension', $id));
+    		$file = $this->Myfile->read(array('filename', 'extension', $id));
     	}
 
     	$params = array_merge($this->resizeDefaults, $params);

@@ -6,17 +6,17 @@
             echo '<ul>';
             foreach($files as $medium) {
                 #debug($medium);
-                $thumbnailImage = !empty($medium['File']['thumbnail']) ? '/theme/default/files/thumbs/'.$medium['File']['id'].'_000'.$medium['File']['thumbnail'].'.png' : '/img/noImage.jpg';
+                $thumbnailImage = !empty($medium['Myfile']['thumbnail']) ? '/theme/default/files/thumbs/'.$medium['Myfile']['id'].'_000'.$medium['Myfile']['thumbnail'].'.png' : '/img/noImage.jpg';
                 ?>
                     <li class="filesIndexLi">
                         <div class="filesIndexThumbnail">
-                            <a href="/file_manager/files/view/<?php echo $medium['File']['id'] ?>"><img src="<?php echo $thumbnailImage ?>" alt="<?php echo $medium['File']['title'] ?>" height="200" width="200"/></a>
+                            <a href="/file_manager/files/view/<?php echo $medium['Myfile']['id'] ?>"><img src="<?php echo $thumbnailImage ?>" alt="<?php echo $medium['Myfile']['title'] ?>" height="200" width="200"/></a>
                         </div>
                         <div class="filesIndexTitle">
-                            <a href="/file_manager/files/view/<?php echo $medium['File']['id'] ?>"><?php echo !empty($medium['File']['title']) ? $medium['File']['title'] : '(untitled)' ?></a>
+                            <a href="/file_manager/files/view/<?php echo $medium['Myfile']['id'] ?>"><?php echo !empty($medium['Myfile']['title']) ? $medium['Myfile']['title'] : '(untitled)' ?></a>
                         </div>
                         <div class="filesIndexDescription">
-                            <?php echo $medium['File']['description'] ?>
+                            <?php echo $medium['Myfile']['description'] ?>
                         </div>
                     </li>
                 <?php

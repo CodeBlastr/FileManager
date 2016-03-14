@@ -133,13 +133,20 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
 	public function afterSave($Event) {
 		if ($this->_checkEvent($Event)) {
 			$Model = $Event->subject();
+
+			debug($Model);
 			$Storage = StorageManager::adapter($Model->data[$Model->alias]['adapter']);
+
+			debug($Model->data);
+			debug($Model->alias);
 			$record = $Model->data[$Model->alias];
 
 			try {
 				$id = $record[$Model->primaryKey];
 				$filename = $Model->stripUuid($id);
 				$file = $record['file'];
+
+				debug($record);
 				$format = $record['extension'];
 				$sizes = Configure::read('Media.imageSizes.' . $record['model']);
 				$record['path'] = $Model->fsPath('images' . DS . $record['model'], $id);

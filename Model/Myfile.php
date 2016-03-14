@@ -2,6 +2,8 @@
 App::uses('FileManagerAppModel', 'FileManager.Model');
 class AppFile extends FileManagerAppModel {
 
+
+	public $useTable = 'files';
 	/**
 	 * An array of file types we accept to the file browser plugin.
 	 */
@@ -77,7 +79,7 @@ class AppFile extends FileManagerAppModel {
 		'jpeg'
 	);
 	
-	public $name = 'File';
+	public $name = 'Myfile';
 	
 	public $mime_types_map = array(
 		'123' => 'application/vnd.lotus-1-2-3',
@@ -1119,22 +1121,22 @@ class AppFile extends FileManagerAppModel {
 	 */
 	public function upload($file = null) {
 		// Format single uploads into a [0] many array.
-		if (!empty($file['File']['filename'])) {
-			$data['File'] = array($file['File']);
+		if (!empty($file['Myfile']['filename'])) {
+			$data['Myfile'] = array($file['Myfile']);
 		} else {
 			$data = $file;
 		}
-		$data['File'] = array_values($data['File']); // reindex from 0
-		for ($i=0; $i < count(array_values($data['File'])); $i++) {
-			if ((is_array($data['File'][$i]['filename']) && !empty($data['File'][$i]['filename']['name'])) || (!empty($data['File'][$i]['filename']) && is_string($data['File'][$i]['filename']))) {
-				$this->data['File'] = $data['File'][$i];
+		$data['Myfile'] = array_values($data['Myfile']); // reindex from 0
+		for ($i=0; $i < count(array_values($data['Myfile'])); $i++) {
+			if ((is_array($data['Myfile'][$i]['filename']) && !empty($data['Myfile'][$i]['filename']['name'])) || (!empty($data['Myfile'][$i]['filename']) && is_string($data['Myfile'][$i]['filename']))) {
+				$this->data['Myfile'] = $data['Myfile'][$i];
 				if ($this->beforeUpload()) {
 					$fileFile = $this->data; // this data was manipulated in beforeUpload()
 					$this->create();
 					if ($this->save($fileFile)) {
 						$this->afterUpload($fileFile);
-						$return['File'][$i] = $fileFile['File'];
-						$return['File'][$i]['id'] = !empty($return['File'][$i]['id']) ? $return['File'][$i]['id'] : $this->id;
+						$return['Myfile'][$i] = $fileFile['Myfile'];
+						$return['Myfile'][$i]['id'] = !empty($return['Myfile'][$i]['id']) ? $return['Myfile'][$i]['id'] : $this->id;
 					} else {
 						throw new Exception(__('File save failed'));
 					}
@@ -1152,13 +1154,13 @@ class AppFile extends FileManagerAppModel {
  * @return boolean
  */
 	public function beforeUpload() {
-		$this->data['File']['model'] = !empty($this->data['File']['model']) ? $this->data['File']['model'] : 'File';
-		$this->plugin = strtolower(ZuhaInflector::pluginize($this->data['File']['model']));
+		$this->data['Myfile']['model'] = !empty($this->data['Myfile']['model']) ? $this->data['Myfile']['model'] : 'Myfile';
+		$this->plugin = strtolower(ZuhaInflector::pluginize($this->data['Myfile']['model']));
 		$this->__createDirectories();
 		$this->data = $this->_handleRecordings($this->data);
 		$this->data = $this->_handleCanvasImages($this->data);
-		$this->fileExtension = $this->getFileExtension($this->data['File']['filename']);
-		$this->data['File']['extension'] = empty($this->data['File']['extension']) ? $this->fileExtension : $this->data['File']['extension'];
+		$this->fileExtension = $this->getFileExtension($this->data['Myfile']['filename']);
+		$this->data['Myfile']['extension'] = empty($this->data['Myfile']['extension']) ? $this->fileExtension : $this->data['Myfile']['extension'];
 		return $this->processFile();
 	}
 
@@ -1215,7 +1217,7 @@ class AppFile extends FileManagerAppModel {
 		}
 		exec($command);
 		if (file_exists($thumbnailFilePath)) {
-			$data['File']['thumbnail'] = DS . 'file_manager' . DS . 'images' . DS . $randomFilename . '.jpg';
+			$data['Myfile']['thumbnail'] = DS . 'file_manager' . DS . 'images' . DS . $randomFilename . '.jpg';
 			return $this->save($data);
 		}
 	}
@@ -1223,11 +1225,11 @@ class AppFile extends FileManagerAppModel {
 /**
  * Give this a File array and it will give you the full path of the actual file
  *
- * @param array Standard $data['File'] array
+ * @param array Standard $data['Myfile'] array
  * @return string Full path of file file
  */
 	public function getFileFilePath($data) {
-		return $this->themeDirectory . DS . $data['File']['type'] . DS . $data['File']['filename'] . '.' . $data['File']['extension'];
+		return $this->themeDirectory . DS . $data['Myfile']['type'] . DS . $data['Myfile']['filename'] . '.' . $data['Myfile']['extension'];
 	}
 
 /**
@@ -1235,8 +1237,8 @@ class AppFile extends FileManagerAppModel {
  * @return boolean
  */
 	public function processFile() {
-		$this->data['File']['type'] = $this->fileType($this->fileExtension);
-		if ($this->data['File']['type']) {
+		$this->data['Myfile']['type'] = $this->fileType($this->fileExtension);
+		if ($this->data['Myfile']['type']) {
 			$this->data = $this->uploadFile($this->data); // this throws an exception if it fails no need for return false
 		}
 		return true;
@@ -1294,15 +1296,15 @@ class AppFile extends FileManagerAppModel {
 			return $data;
 		}
 		$uuid = $this->__uuid() . uniqid();
-		$newFile = $this->themeDirectory . DS . $this->data['File']['type'] . DS . $uuid . '.' . $this->fileExtension;
-		if (rename($data['File']['filename']['tmp_name'], $newFile)) {
-			$data['File']['filename'] = $uuid;
+		$newFile = $this->themeDirectory . DS . $this->data['Myfile']['type'] . DS . $uuid . '.' . $this->fileExtension;
+		if (rename($data['Myfile']['filename']['tmp_name'], $newFile)) {
+			$data['Myfile']['filename'] = $uuid;
 			// change the filename to just the filename
-			$data['File']['extension'] = $this->fileExtension;
+			$data['Myfile']['extension'] = $this->fileExtension;
 			// change the extension to just the extension
 			return $data;
 		} else {
-			throw new Exception(__d('file', 'File Upload of ' . $data['File']['filename']['name'] . ' to ' . $newFile . '  Failed'));
+			throw new Exception(__d('file', 'File Upload of ' . $data['Myfile']['filename']['name'] . ' to ' . $newFile . '  Failed'));
 		}
 	}
 
@@ -1312,8 +1314,8 @@ class AppFile extends FileManagerAppModel {
 	 *
 	 */
 	private function _handleRecordings($data) {
-		if (!empty($data['File']['type']) && $data['File']['type'] == 'record') {
-			$fileName = $data['File']['uuid'];
+		if (!empty($data['Myfile']['type']) && $data['Myfile']['type'] == 'record') {
+			$fileName = $data['Myfile']['uuid'];
 			$serverFile = '/home/razorit/source/red5-read-only/dist/webapps/oflaDemo/streams/' . $fileName . '.flv';
 			$localFile = $this->themeDirectory . $this->plugin . DS . 'videos' . DS . $fileName . '.flv';
 			#$url = '/theme/default/file_manager/'.$this->pluginFolder.'/videos/'.$fileName.'.flv';
@@ -1327,11 +1329,11 @@ class AppFile extends FileManagerAppModel {
 			} else {
 				return false;
 			}
-			$data['File']['filename']['name'] = $fileName . '.flv';
-			$data['File']['filename']['type'] = 'video/x-flv';
-			$data['File']['filename']['tmp_name'] = $localFile;
-			$data['File']['filename']['error'] = 0;
-			$data['File']['filename']['size'] = 99999;
+			$data['Myfile']['filename']['name'] = $fileName . '.flv';
+			$data['Myfile']['filename']['type'] = 'video/x-flv';
+			$data['Myfile']['filename']['tmp_name'] = $localFile;
+			$data['Myfile']['filename']['error'] = 0;
+			$data['Myfile']['filename']['size'] = 99999;
 			//
 		}
 		return $data;
@@ -1345,18 +1347,18 @@ class AppFile extends FileManagerAppModel {
 	 * @return int
 	 */
 	private function _handleCanvasImages($data) {
-		if (!empty($data['File']['canvasImageData'])) {
-			$canvasImageData = str_replace('data:image/png;base64,', '', $data['File']['canvasImageData']);
+		if (!empty($data['Myfile']['canvasImageData'])) {
+			$canvasImageData = str_replace('data:image/png;base64,', '', $data['Myfile']['canvasImageData']);
 			$decodedImage = base64_decode($canvasImageData);
-			$filename = preg_replace("/[^\w\s\d\-_~,;:\[\]\(\]]|[\.]{2,}/", '', $data['File']['title'] . '_' . uniqid());
+			$filename = preg_replace("/[^\w\s\d\-_~,;:\[\]\(\]]|[\.]{2,}/", '', $data['Myfile']['title'] . '_' . uniqid());
 			$saveName = $this->themeDirectory . $this->plugin . DS . 'images' . DS . $filename . '.png';
 			$fopen = fopen($saveName, 'wb');
 			fwrite($fopen, $decodedImage);
 			fclose($fopen);
-			$data['File']['filename']['name'] = $filename . '.png';
-			$data['File']['filename']['type'] = 'image/png';
-			$data['File']['filename']['tmp_name'] = $saveName;
-			$data['File']['filename']['error'] = 0;
+			$data['Myfile']['filename']['name'] = $filename . '.png';
+			$data['Myfile']['filename']['type'] = 'image/png';
+			$data['Myfile']['filename']['tmp_name'] = $saveName;
+			$data['Myfile']['filename']['error'] = 0;
 		}
 		return $data;
 	}
@@ -1374,8 +1376,8 @@ class AppFile extends FileManagerAppModel {
 		foreach ($data['collection'] as &$canvasObject) {
 			if ($canvasObject['type'] == 'screenshot') {
 				$savedImage = $this->_saveCanvasImageObject($canvasObject, $galleryId);
-				$canvasObject['id'] = $savedImage['File']['id'];
-				$canvasObject['content'] = $this->fileUrl . $savedImage['File']['type'] . '/' . $savedImage['File']['filename'] . '.' . $savedImage['File']['extension'];
+				$canvasObject['id'] = $savedImage['Myfile']['id'];
+				$canvasObject['content'] = $this->fileUrl . $savedImage['Myfile']['type'] . '/' . $savedImage['Myfile']['filename'] . '.' . $savedImage['Myfile']['extension'];
 			}
 		}
 		// save all data to our screenshot/parent row
@@ -1438,7 +1440,7 @@ class AppFile extends FileManagerAppModel {
 			if ($galleryId === false) {
 				$this->Behaviors->disable('FileAttachment');
 			}
-			$this->data = array('File' => array('filename' => array(
+			$this->data = array('Myfile' => array('filename' => array(
 						'name' => $uuid . '.' . $extension,
 						'tmp_name' => sys_get_temp_dir() . DS . $uuid
 					)));
@@ -1460,6 +1462,6 @@ class AppFile extends FileManagerAppModel {
 }
 
 if (!isset($refuseInit)) {
-	class File extends AppFile {
+	class Myfile extends AppFile {
 	}
 }

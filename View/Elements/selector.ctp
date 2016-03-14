@@ -7,9 +7,9 @@ $bootstrap = isset($bootstrap) ? $bootstrap :  3;
 $selecteditems = array();
 if(isset($media) && !empty($media)) {
 	foreach ($media as $m) {
-		if(isset($m['File'])) {
-			$m['File']['selected'] = true;
-			$selecteditems[] = $m['File'];
+		if(isset($m['Myfile'])) {
+			$m['Myfile']['selected'] = true;
+			$selecteditems[] = $m['Myfile'];
 		} else {
 			$m['selected'] = true;
 			$selecteditems[] = $m;
@@ -42,7 +42,7 @@ $selecteditems = json_encode($selecteditems); ?>
 	var selectable = true;
 	var wrapperclass = '<?php echo $wrapperclass; ?>';
 	var selecteditems = <?php echo $selecteditems; ?>;
-	var baseUrl = '<?php echo $this->Html->url(array('plugin' => 'FileManager', 'controller' => 'file_manager', 'action' => 'File', '?'=>array('limit'=>50))); ?>';
+	var baseUrl = '<?php echo $this->Html->url(array('plugin' => 'FileManager', 'controller' => 'file_manager', 'action' => 'Myfile', '?'=>array('limit'=>50))); ?>';
 </script>
 
 <?php if($bootstrap == 2): ?>

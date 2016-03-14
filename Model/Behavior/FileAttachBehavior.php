@@ -33,9 +33,9 @@ class FileAttachBehavior extends ModelBehavior {
  */
 	public function beforeSave(Model $Model, $options = array()) {
 		//doing it this way to protect against saveAll
-		if (isset($Model->data['File'])) {
-			$this->data['File'] = $Model->data['File'];
-			unset($Model->data['File']);
+		if (isset($Model->data['Myfile'])) {
+			$this->data['Myfile'] = $Model->data['Myfile'];
+			unset($Model->data['Myfile']);
 		}
 		return true;
 	}
@@ -49,7 +49,7 @@ class FileAttachBehavior extends ModelBehavior {
  * @return boolean
  */
 	public function afterSave(Model $Model, $created, $options = array()) {
-		if (!empty($this->data['File'])) {
+		if (!empty($this->data['Myfile'])) {
 			$files = $this->upload($Model, $this->data);
 		}
 		return true;
@@ -69,7 +69,7 @@ class FileAttachBehavior extends ModelBehavior {
  */
 	public function beforeDelete(Model $Model, $cascade = true) {
 		//unbinds the model, so we can handle the delete
-		$Model->unbindModel(array('hasMany' => array('File')));
+		$Model->unbindModel(array('hasMany' => array('Myfile')));
 		return true;
 	}
 
@@ -163,16 +163,16 @@ class FileAttachBehavior extends ModelBehavior {
 	public function upload(Model $Model, $data) {
 		$data = !empty($data) ? $data : $this->data;
 
-		if (!empty($data['File'])) {
+		if (!empty($data['Myfile'])) {
 			ini_set('memory_limit', '750M');
-			foreach ($data['File'] as $attachment) {	
+			foreach ($data['Myfile'] as $attachment) {	
 				if (!empty($attachment['file']['tmp_name'])) { // make sure there is actually a file to upload
-					$data[$this->ImageStorage->alias]['adapter'] = 'S3Storage';
+					$data[$this->ImageStorage->alias]['adapter'] = Configure::read('FileStorage.adapter');
 					$model = $this->_detectModelByFileType($attachment['file']['type']);
 					
 					if ($model) {
-						$data['File']['model'] = $model;
-						$data['File']['adapter'] = 'S3Storage';
+						$data['Myfile']['model'] = $model;
+						$data['Myfile']['adapter'] = Configure::read('FileStorage.adapter');
 						App::uses('File', 'Utility');
 						$file = new File($attachment['file']['tmp_name']);
 						$info = $file->info();
@@ -188,7 +188,7 @@ class FileAttachBehavior extends ModelBehavior {
 							'mime_type' => $info['mime'],
 							'extension' => substr(strrchr($attachment['file']['name'],'.'),1),
 							//'path' => '/' . str_replace('sites/', '', SITE_DIR) . str_replace($replacement, '', $info['dirname']) . '/',
-							'adapter' => 'S3Storage',
+							'adapter' => Configure::read('FileStorage.adapter'),
 							))
 						);
 						$saveData[$this->$model->alias]['file']['name'] = uniqid('', true) . '.' . substr(strrchr($attachment['file']['name'],'.'),1);

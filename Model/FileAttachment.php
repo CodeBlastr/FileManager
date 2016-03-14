@@ -15,8 +15,8 @@ class FileAttachment extends FileManagerAppModel {
 	public $name = 'FileAttachment';
 
 	public $hasMany = array(
-		'File' => array(
-			'className' => 'FileManager.File',
+		'Myfile' => array(
+			'className' => 'FileManager.Myfile',
 			'foreignKey' => 'file_id'
 		)
 	);

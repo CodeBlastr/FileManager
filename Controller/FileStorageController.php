@@ -12,7 +12,17 @@ class FileStorageController extends FileManagerAppController {
 
 	public $helpers = array('FileManager.Image');
 	
-	
+	function beforeFilter()	{
+		//debug($this->plugins());
+		$plugins = CakePlugin::loaded();
+		$fs = array_search('FileManager', $plugins);
+		if($fs !== false) {
+			CakePlugin::load(array(
+				'FileManager' => array('bootstrap' => true)
+			));
+		}
+		parent::beforeFilter();
+	}
 	/**
 	 * Custom function for migrating from old file browser (kcfinder) to new one
 	 * 
@@ -26,7 +36,7 @@ class FileStorageController extends FileManagerAppController {
 		$replacement = $directory = ROOT . DS . SITE_DIR . DS. 'Locale' . DS . 'View' . DS . 'webroot';
 		$directory = $replacement . DS . 'upload';
 		App::uses('Folder', 'Utility');
-		App::uses('File', 'Utility');
+		App::uses('Myfile', 'Utility');
 		$dir = new Folder($directory);
 		$files = $dir->findRecursive();
 		foreach ($files as $file) {
@@ -40,7 +50,7 @@ class FileStorageController extends FileManagerAppController {
 				$data['FileStorage']['mime_type'] = $info['mime'];
 				$data['FileStorage']['extension'] = $info['extension'];
 				$data['FileStorage']['path'] = '/' . str_replace('sites/', '', SITE_DIR) . str_replace($replacement, '', $info['dirname']) . '/';
-				$data['FileStorage']['adapter'] = 'S3Storage';
+				$data['FileStorage']['adapter'] = Configure::read('FileStorage.adapter');
 				$data['FileStorage']['creator_id'] = $int = intval(filter_var($data['FileStorage']['path'], FILTER_SANITIZE_NUMBER_INT));
 				$data['FileStorage']['modifier_id'] = $int;
 				$data['FileStorage']['created'] = date('Y-m-d H:i:s', $file->lastChange());
@@ -68,17 +78,13 @@ class FileStorageController extends FileManagerAppController {
 
 	public function browser() {
 
-		CakePlugin::loadAll(array(
-			'FileManager' => array('bootstrap' => true)
-		));
-		//exit('CCCCCCCC');
 		if(isset($this->request->query['CKEditor'])) {
 			$this->layout = false;
 			$this->view = 'ckebrowser';
 		}
 
 		//Debugging
-		$this->layout = false;
+		//$this->layout = false;
 		$this->view = 'filebrowser';
 
 		$params = array();
@@ -142,20 +148,19 @@ class FileStorageController extends FileManagerAppController {
 	}
 
 	public function upload() {
+
 		if (!$this->request->is('get')) {
 			$data = $this->request->data;
 //			debug($this->ImageStorage->alias);
-			$data[$this->ImageStorage->alias]['adapter'] = 'S3Storage';
-//			$data['ImageStorage']['adapter'] = 'S3Storage';
-//			$data['VideoStorage']['adapter'] = 'S3Storage';
-		Configure::write('debug', 2);
-		debug($data);
-			$model = $this->_detectModelByFileType($data['File']['file']['type']);
+			$data[$this->ImageStorage->alias]['adapter'] = Configure::read('FileStorage.adapter');
+//			$data['ImageStorage']['adapter'] = Configure::read('FileStorage.adapter');
+//			$data['VideoStorage']['adapter'] = Configure::read('FileStorage.adapter');
+			$model = $this->_detectModelByFileType($data['Myfile']['file']['type']);
 			if ($model) {
-				$data['File']['model'] = $this->$model->alias;
-				$data['File']['adapter'] = 'S3Storage';
+				$data['Myfile']['model'] = $this->$model->alias;
+				$data['Myfile']['adapter'] = Configure::read('FileStorage.adapter');
 				try {
-					if ($data = $this->$model->save(array($this->$model->alias => $data['File']))) {
+					if ($data = $this->$model->save(array($this->$model->alias => $data['Myfile']))) {
 						$this->response->statusCode(200);
 						$message = "Upload Successful";
 					} else {

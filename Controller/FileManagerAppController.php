@@ -1,10 +1,6 @@
 <?php
+App::uses('FileManagerAppController', 'Controller');
 class FileManagerAppController extends AppController {
-	protected function __returnJsonResponse($response) {
-		$this->autoRender = false;
-		$this->response->statusCode($response['statusCode']);
-		$this->response->body(json_encode($response['body']));
-	}
 
 	/**
 	 * Simple Method for detecting what model to save to

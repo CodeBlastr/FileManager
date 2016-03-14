@@ -7,9 +7,9 @@
 	$selecteditems = array();
 	if(isset($media) && !empty($media)) {
 	foreach ($media as $m) {
-		if(isset($m['File'])) {
-			$m['File']['selected'] = true;
-			$selecteditems[] = $m['File'];
+		if(isset($m['Myfile'])) {
+			$m['Myfile']['selected'] = true;
+			$selecteditems[] = $m['Myfile'];
 		}else {
 			$m['selected'] = true;
 			$selecteditems[] = $m;

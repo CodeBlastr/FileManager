@@ -1,1 +1,1 @@
-<?php echo $this->Element('record', array('uuid' => $uuid, 'model' => 'File', 'foreignKey' => null), array('plugin' => 'file_manager')); ?>
+<?php echo $this->Element('record', array('uuid' => $uuid, 'model' => 'Myfile', 'foreignKey' => null), array('plugin' => 'file_manager')); ?>

@@ -88,6 +88,7 @@ class ImageStorage extends FileStorage {
  * @return boolean true on success
  */
 	public function beforeSave($options = array()) {
+		debug($this->data);
 		if (!parent::beforeSave($options)) {
 			return false;
 		}

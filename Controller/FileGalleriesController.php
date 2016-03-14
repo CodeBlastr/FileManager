@@ -9,7 +9,7 @@ class AppFileGalleriesController extends FileManagerAppController {
 	public $name = 'FileGalleries';
 	public $uses = 'FileManager.FileGallery';
 
-	public $helpers = array('FileManager.File');
+	public $helpers = array('FileManager.Myfile');
 
 	public $displayElements =  array(
 		'jplayer_element' => 'JPlayer',
@@ -44,7 +44,7 @@ class AppFileGalleriesController extends FileManagerAppController {
 		if ( empty($this->request->data) ) {
 			$this->FileGallery->contain(array(
 				'Thumbnail',
-				'File'
+				'Myfile'
 			));
 			$this->request->data = $this->FileGallery->findById($uid);
 		} else {
@@ -65,10 +65,10 @@ class AppFileGalleriesController extends FileManagerAppController {
 				'conditions' => array(
 					'FileGallery.id' => $fileID
 				),
-				'contain' => array('User', 'File')
+				'contain' => array('User', 'Myfile')
 			));
 
-			$this->pageTitle = $theFile['File']['title'];
+			$this->pageTitle = $theFile['Myfile']['title'];
 			$this->set('theFile', $theFile);
 		}
 	}
@@ -122,11 +122,11 @@ class AppFileGalleriesController extends FileManagerAppController {
 			$this->request->data = $this->FileGallery->find('all', array(
 					'conditions' => array('id' => $galleryid),
 					'fields' => array('FileGallery.id'),
-					'contain' => array('File' => array('fields' => array('File.extension', 'File.filename', 'File.id'), 'limit' => $limit, 'order' => 'RAND()')),
+					'contain' => array('Myfile' => array('fields' => array('Myfile.extension', 'Myfile.filename', 'Myfile.id'), 'limit' => $limit, 'order' => 'RAND()')),
 			));
 		}
 
-		$this->request->data = array('path' => $this->FileGallery->File->fileUrl.'images/', 'File' => $this->request->data[0]['File']);
+		$this->request->data = array('path' => $this->FileGallery->File->fileUrl.'images/', 'Myfile' => $this->request->data[0]['Myfile']);
 		return json_encode($this->request->data);
 	}
 
@@ -147,7 +147,7 @@ class AppFileGalleriesController extends FileManagerAppController {
 			// No parameters passed. This is a brand new freeform canvas gallery.
 			if (!($galleryId) && !($fileId)) {
 				// generate a gallery w/ 4 attached File
-				$firstFileId = $this->FileGallery->generate(array('File' => 4));
+				$firstFileId = $this->FileGallery->generate(array('Myfile' => 4));
 				// redirect them to this gallery's first page editor
 				$this->redirect(array('action' => 'canvas', $this->FileGallery->id, $firstFileId));
 			}
@@ -158,8 +158,8 @@ class AppFileGalleriesController extends FileManagerAppController {
 					'conditions' => array('FileGallery.id' => $galleryId)
 				));
 				#dirty
-				if (!empty($this->request->data['File'])) {
-					foreach ($this->request->data['File'] as &$file) {
+				if (!empty($this->request->data['Myfile'])) {
+					foreach ($this->request->data['Myfile'] as &$file) {
 						if ($file['id'] === $this->passedArgs[1]) {
 							// add the `id` into the data field, as this is the data used by the JavaScript..
 							$file['data'] = json_decode($file['data']);
@@ -173,7 +173,7 @@ class AppFileGalleriesController extends FileManagerAppController {
 				$this->request->data = $this->FileGallery->find('first', array(
 					'conditions' => array('FileGallery.id' => $galleryId)
 				));
-				$this->redirect(array('action' => 'canvas', $galleryId, $this->request->data['File'][0]['id']));
+				$this->redirect(array('action' => 'canvas', $galleryId, $this->request->data['Myfile'][0]['id']));
 			}
 		}
 	}
@@ -185,7 +185,7 @@ class AppFileGalleriesController extends FileManagerAppController {
 		));
 
 		// format data
-		foreach ($this->request->data['File'] as $file) {
+		foreach ($this->request->data['Myfile'] as $file) {
 			$collectionArray[] = json_decode($file['data']);
 		}
 

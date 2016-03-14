@@ -11,7 +11,7 @@ class FileAttachmentFixture extends CakeTestFixture {
  *
  * @var array
  */
-	public $import = array('config' => 'File.FileAttachment');
+	public $import = array('config' => 'Myfile.FileAttachment');
 
 /**
  * Records

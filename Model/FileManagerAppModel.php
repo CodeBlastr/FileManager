@@ -59,8 +59,8 @@ class FileManagerAppModel extends AppModel {
  * 
  */
  	public function menuInit($data = null) {
- 		App::uses('File', 'FileManager.Model');
-		$File = new File;
+ 		App::uses('Myfile', 'FileManager.Model');
+		$Myfile = new Myfile;
 		// link to properties index and first property
 		$data['WebpageMenuItem']['item_url'] = '/file_manager/file_manager/filebrowser';
 		$data['WebpageMenuItem']['item_text'] = 'File Manager';

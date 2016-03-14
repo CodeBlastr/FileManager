@@ -74,9 +74,9 @@ class ImageManipulation {
 		if (empty($id)) {
 			return false;
 		} else {
-			APP::import('Model', 'File');
-			$this->File = new File();
-			$file = $this->File->read(array(
+			APP::import('Model', 'Myfile');
+			$this->Myfile = new Myfile();
+			$file = $this->Myfile->read(array(
 					'filename',
 					'extension',
 					$id

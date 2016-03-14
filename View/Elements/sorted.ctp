@@ -45,17 +45,17 @@ foreach ($media as $medium) {
    <li>
        <div class="media_sorted">
 	    <div>
-		<a href="/file_manager/files/view/{$medium['File']['id']}">
-		    {$medium['File']['title']}
+		<a href="/file_manager/files/view/{$medium['Myfile']['id']}">
+		    {$medium['Myfile']['title']}
 		</a>
 	    </div>
 	    <div>
-		<a href="/file_manager/files/view/{$medium['File']['id']}">
-		    <img src="/theme/default/file_manager/thumbs/{$medium['File']['id']}_000{$medium['File']['thumbnail']}.jpg" width="144" height="94" alt="{$medium['File']['title']}" />
+		<a href="/file_manager/files/view/{$medium['Myfile']['id']}">
+		    <img src="/theme/default/file_manager/thumbs/{$medium['Myfile']['id']}_000{$medium['Myfile']['thumbnail']}.jpg" width="144" height="94" alt="{$medium['Myfile']['title']}" />
 		</a>
 	    </div>
 	    <div>
-		Rating = {$medium['File']['rating']}
+		Rating = {$medium['Myfile']['rating']}
 	    </div>
        </div>
     </li>

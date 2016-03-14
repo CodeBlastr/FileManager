@@ -35,10 +35,10 @@
 				<li class="span2 media-item">
 					<a href="#" class="thumbnail">
 						<?php echo $this->Media->display($item, array('width' => 100, 'height' => 100)); ?>
-						<p style="text-align: center;"><?php echo $item['File']['title']; ?></p>
+						<p style="text-align: center;"><?php echo $item['Myfile']['title']; ?></p>
 					</a>
 					<div class="actions">
-					<?php echo $this->Html->link('<span class="glyphicon glyphicon-remove-circle"></span>', array('action' => 'delete', $item['File']['id']), array('escape' => false), __('Are you sure you want to delete %s', !empty($item['File']['title']) ? $item['File']['title'] : $item['File']['id'])); ?>
+					<?php echo $this->Html->link('<span class="glyphicon glyphicon-remove-circle"></span>', array('action' => 'delete', $item['Myfile']['id']), array('escape' => false), __('Are you sure you want to delete %s', !empty($item['Myfile']['title']) ? $item['Myfile']['title'] : $item['Myfile']['id'])); ?>
 					</div>
 					
 				</li>
@@ -52,17 +52,17 @@
 			<div class="upload-form">
 			<?php;
 				 if(isset($galleryid)) {
-	   			 	echo $this->Form->create('File', array('plugin' => 'File', 'controller' => 'File', 'action' => 'add', $galleryid), array('type' => 'file'));
+	   			 	echo $this->Form->create('Myfile', array('plugin' => 'FileManager', 'controller' => 'Myfile', 'action' => 'add', $galleryid), array('type' => 'file'));
 				  }else {
-						echo $this->Form->create('File', array('plugin' => 'File', 'controller' => 'File', 'action' => 'add'), array('type' => 'file'));
+						echo $this->Form->create('Myfile', array('plugin' => 'FileManager', 'controller' => 'Myfile', 'action' => 'add'), array('type' => 'file'));
 					}
-				 echo $this->Form->input('File.filename', array('type'=>'file', 'label' => 'Upload a file from your computer:')); // , 'accept' => 'audio/* video/*'
+				 echo $this->Form->input('Myfile.filename', array('type'=>'file', 'label' => 'Upload a file from your computer:')); // , 'accept' => 'audio/* video/*'
 				
-				 //echo $this->Form->input('File.submittedurl', array('type'=>'text', 'label' => 'Alternatively enter the URL of a file that is already online:'));
+				 //echo $this->Form->input('Myfile.submittedurl', array('type'=>'text', 'label' => 'Alternatively enter the URL of a file that is already online:'));
 				
-				 echo $this->Form->input('File.title', array('type'=>'text', 'label' => 'Title:'));
+				 echo $this->Form->input('Myfile.title', array('type'=>'text', 'label' => 'Title:'));
 				
-				 echo $this->Form->input('File.description', array('type'=>'textarea', 'label' => 'Description:'));
+				 echo $this->Form->input('Myfile.description', array('type'=>'textarea', 'label' => 'Description:'));
 	
 	    		echo $this->Form->end('Submit');
 	    ?>

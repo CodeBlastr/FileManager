@@ -65,7 +65,7 @@
 		    }; 
 		 
 		    // bind form using 'ajaxForm' 
-		    $('#FileBrowserForm').ajaxForm(options); 
+		    //$('#FileBrowserForm').ajaxForm(options); 
 
 			//Click Handler for ckeditor
 			$("#browserList").on('click', '.select-media', function(e) {
