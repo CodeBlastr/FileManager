@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="/FileManager/css/app.css" />
 <script src="/FileManager/bower_components/modernizr/modernizr.js"></script>
-
 <div class="container">
 	<div class="row">
   		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

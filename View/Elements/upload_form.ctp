@@ -2,8 +2,8 @@
 <fieldset>
 									<legend>Upload a File</legend>
 		<?php 
-			echo $this->Form->file('file');
-			echo $this->Form->error('file');
+			echo $this->Form->file('files][', array('id'=>'MyfileFile', 'multiple'=>'multiple'));
+			echo $this->Form->error('files');
 		?>
 		</fieldset>
 	<?php echo $this->Form->end('Upload'); ?>

@@ -18,6 +18,14 @@ class StorageManager {
 			'adapterOptions' => array(TMP, true),
 			'adapterClass' => '\Gaufrette\Adapter\Local',
 			'class' => '\Gaufrette\Filesystem'
+		),
+		'S3Storage' => array(
+			'adapterOptions' => array(null,
+				'testdevlocal',
+				array (),
+				true ),
+			'adapterClass' => '\Gaufrette\Adapter\AwsS3',
+			'class' => '\Gaufrette\Filesystem'
 		)
 	);
 

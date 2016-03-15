@@ -65,7 +65,7 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
  * @param CakeEvent $Event
  * @return void
  */
-	public function createVersions($Event) {
+	public function createVersions(CakeEvent $Event) {
 		if ($this->_checkEvent($Event)) {
 			$Model = $Event->subject();
 			$Storage = $Event->data['storage'];
@@ -83,7 +83,7 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
  * @param CakeEvent $Event
  * @return void
  */
-	public function removeVersions($Event) {
+	public function removeVersions(CakeEvent $Event) {
 		if ($this->_checkEvent($Event)) {
 			$Model = $Event->subject();
 			$Storage = $Event->data['storage'];
@@ -112,7 +112,7 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
  * @param CakeEvent $Event
  * @return void
  */
-	public function afterDelete($Event) {
+	public function afterDelete(CakeEvent $Event) {
 		if ($this->_checkEvent($Event)) {
 			$Model = $Event->subject();
 			$path = Configure::read('Media.basePath') . $Event->data['record'][$Model->alias]['path'];
@@ -130,9 +130,11 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
  * @param CakeEvent $Event
  * @return void
  */
-	public function afterSave($Event) {
+	public function afterSave(CakeEvent $Event) {
 		if ($this->_checkEvent($Event)) {
 			$Model = $Event->subject();
+
+			debug($Model->data);
 
 			$Storage = StorageManager::adapter($Model->data[$Model->alias]['adapter']);
 
@@ -171,7 +173,7 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
  * @param CakeEvent $Event
  * @return void
  */
-	public function imagePath($Event) {
+	public function imagePath(CakeEvent $Event) {
 		if ($Event->data['image']['adapter'] == 'Local') {
 			$Helper = $Event->subject();
 			extract($Event->data);

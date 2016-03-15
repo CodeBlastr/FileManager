@@ -319,6 +319,7 @@ class ImageProcessingListener extends Object implements CakeEventListener {
  * @return string
  */
 	protected function _buildCloudFrontDistributionUrl($protocol, $image, $bucket, $bucketPrefix = null, $cfDist = null) {
+
 		$path = $protocol . '://';
 		if ($cfDist) {
 			$path .= $cfDist;
@@ -424,6 +425,7 @@ class ImageProcessingListener extends Object implements CakeEventListener {
  * @return void
  */
 	public function getAdapterClassName($adapterConfigName) {
+
 		$config = StorageManager::config($adapterConfigName);
 
 		switch ($config['adapterClass']) {

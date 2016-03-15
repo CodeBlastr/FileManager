@@ -155,25 +155,39 @@ class FileStorageController extends FileManagerAppController {
 			$data[$this->ImageStorage->alias]['adapter'] = Configure::read('FileStorage.adapter');
 //			$data['ImageStorage']['adapter'] = Configure::read('FileStorage.adapter');
 //			$data['VideoStorage']['adapter'] = Configure::read('FileStorage.adapter');
-			$model = $this->_detectModelByFileType($data['Myfile']['file']['type']);
-			if ($model) {
-				$data['Myfile']['model'] = $this->$model->alias;
-				$data['Myfile']['adapter'] = Configure::read('FileStorage.adapter');
-				try {
-					if ($data = $this->$model->save(array($this->$model->alias => $data['Myfile']))) {
-						$this->response->statusCode(200);
-						$message = "Upload Successful";
-					} else {
-						$this->response->statusCode(500);
-						$message = "Upload Failed";
+
+			$success = $failure = 0;
+			foreach($data['Myfile']['files'] as $filedata)	{
+				$file['file'] = $filedata;				
+				$model = $this->_detectModelByFileType($file['file']['type']);
+				if ($model) {
+					$file['model'] = $this->$model->alias;
+					$file['adapter'] = Configure::read('FileStorage.adapter');
+					try {
+						$this->$model->create();
+						if ($data = $this->$model->save(array($this->$model->alias => $file))) {
+							$success++;
+						} else {
+							$failure++;
+						}
+					} catch (Exception $e) {
+						debug($e->getMessage());
 					}
-				} catch (Exception $e) {
-					debug($e->getMessage());exit;
+				} else {
+					$this->response->statusCode(415);
+					$message .= "Invalid File Type :({$file['file']['name']})\n";
 				}
-			} else {
-				$this->response->statusCode(415);
-				$message = "Invalid File Type";
 			}
+			if($success>0)	{
+					$this->response->statusCode(200);
+					$message = sprintf("%d files uploaded successfully", $success);
+					if($failure>0)	{
+						$message .= "\n" . sprintf("%d files not uploaded", $failure);
+					}
+				}	elseif($failure>0)	{
+						$this->response->statusCode(500);
+						$message = sprintf("%d files could not be successfully");
+				}
 			if($this->request->is('ajax')) {
 				$this->layout = false;
 				$this->set('media', $this->FileStorage->find('all', array('order' => array('FileStorage.filename' => 'ASC'))));
@@ -184,5 +198,4 @@ class FileStorageController extends FileManagerAppController {
 			}
 		}
 	}
-
 }

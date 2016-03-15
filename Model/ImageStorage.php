@@ -88,7 +88,7 @@ class ImageStorage extends FileStorage {
  * @return boolean true on success
  */
 	public function beforeSave($options = array()) {
-		debug($this->data);
+		//debug($this->data);
 		if (!parent::beforeSave($options)) {
 			return false;
 		}
@@ -123,7 +123,7 @@ class ImageStorage extends FileStorage {
 					'created' => $created,
 					'storage' => $this->getStorageAdapter($this->data[$this->alias]['adapter']),
 					'record' => $this->data));
-			debug($Event->data);
+			//debug($Event->data);
 			$this->getEventManager()->dispatch($Event);
 		}
 	}

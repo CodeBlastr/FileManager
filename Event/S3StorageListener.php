@@ -105,6 +105,7 @@ class S3StorageListener extends AbstractStorageEventListener {
 
 		$path = $Model->fsPath();
 		$path = '/' . str_replace('sites/', '', SITE_DIR) . '/' . str_replace('\\', '/', $path);
+		$path = str_replace('sites\\', '', $path); //for Windows
 		$path = str_replace('//', '/', $path);
 		if ($this->options['preserveFilename'] === false) {
 			$filename = $Model->stripUuid($id);
@@ -119,6 +120,15 @@ class S3StorageListener extends AbstractStorageEventListener {
 		$url = 'https://' . $adapterConfig['adapterOptions'][1] . '.s3.amazonaws.com' . $combined;
 		//$url = 'https://s3.amazonaws.com' . $adapterConfig['adapterOptions'][1] . $combined;
 		
+		/*debug(array(
+			'filename' => $filename,
+			'path' => $path,
+			'combined' => $path . $filename,
+			'url' => $url
+		));
+
+		die;*/
+
 		return array(
 			'filename' => $filename,
 			'path' => $path,

@@ -61,7 +61,6 @@ class LocalFileStorageListener extends Object implements CakeEventListener {
 				$filename = $Model->stripUuid($id);
 				$file = $record['file'];
 				$record['path'] = $Model->fsPath('files' . DS . $record['model'], $id);
-				debug($record['path'] . $filename . '.' . $record['extension']);
 				$result = $Storage->write($record['path'] . $filename . '.' . $record['extension'], file_get_contents($file['tmp_name']), true);
 
 				$Model->save(array($Model->alias => $record), array(

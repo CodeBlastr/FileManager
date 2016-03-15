@@ -57,6 +57,10 @@ class ImageHelper extends AppHelper {
 			return false;
 		}
 
+		if(!isset($options['bucketPrefix']))	{
+			$options['bucketPrefix'] = Configure::read('FileStorage.bucketPrefix');
+		}
+
 		if (!empty($version)) {
 			$hash = Configure::read('Media.imageHashes.' . $image['model'] . '.' . $version);
 			if (empty($hash)) {
@@ -75,7 +79,23 @@ class ImageHelper extends AppHelper {
 		);
 		CakeEventManager::instance()->dispatch($Event);
 
+		if($Event->data['image']['adapter']=='Local')	{
+			//$Event->data['path'] = str_replace('\\', '/', $Event->data['path']);
+			//$Event->data['path'] = str_replace('//', '/', $Event->data['path']);
+			//$Event->data['path'] = Configure::read('FileStorage.subDir') . $Event->data['path'];
+
+			//$Event->data['path'] = Router::url('/', true) . Configure::read('FileStorage.subDir');
+
+			//debug($Event->data['path']);
+			//debug($Event->data['image']);
+
+			$Event->data['path'] = Router::url('/', true) . Configure::read('FileStorage.subDir') . $Event->data['image']['path'] . str_replace('-','',$Event->data['image']['id']) . '.' . $Event->data['image']['extension'];
+		}
+
+		//debug($Event->data['path']);
+
 		if ($Event->isStopped()) {
+			//debug($this->normalizePath($Event->data['path']));
 			return $this->normalizePath($Event->data['path']);
 		} else {
 			return false;

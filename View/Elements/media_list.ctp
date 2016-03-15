@@ -1,4 +1,4 @@
-<?php foreach ($media as $m): ?>
+<?php foreach ($media as $m):?>
 	<li data-equalizer-watch class="media-item">
 		<div class="rel-con">
 			<div class="rel-item" style="text-align: center;min-height: 100px;">
