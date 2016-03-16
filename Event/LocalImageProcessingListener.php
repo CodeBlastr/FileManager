@@ -134,8 +134,6 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
 		if ($this->_checkEvent($Event)) {
 			$Model = $Event->subject();
 
-			debug($Model->data);
-
 			$Storage = StorageManager::adapter($Model->data[$Model->alias]['adapter']);
 
 			$record = $Model->data[$Model->alias];

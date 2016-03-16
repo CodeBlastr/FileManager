@@ -28,7 +28,7 @@ class FileAttachableBehavior extends ModelBehavior {
  */
 	public function beforeSave(Model $Model, $options = array()) {
 		if (!empty($Model->data['Myfile'])) { // do not make this ['Myfile'][0]
-			$File = new File();
+			$File = new Myfile();
 			$files = $File->upload($Model->data);
 			$ids = Set::extract('/id', $files['Myfile']);
 			foreach ($ids as $id) {

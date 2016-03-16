@@ -4,6 +4,7 @@
  <thead>
   <tr>
 		<th><?php echo __('#'); ?></th>
+		<th><?php echo __('Preview'); ?></th>
 		<th><?php echo $this->Paginator->sort('model', __('Type'), array('view'=>'thumb')); ?>
 		<?php if ($this->Paginator->sortKey() == 'model'): ?>
     <i class='fa fa-sort-<?php echo $this->Paginator->sortDir() === 'asc' ? 'up' : 'down'; ?>'></i>
@@ -51,6 +52,7 @@
  <tbody>
 <?php foreach ($media as $m):?>
  <tr>
+	<td><input type="checkbox" name="data[FileStorage][file][]" value="<?php echo $m['FileStorage']['id']; ?>" ></td>
   <td>
 	<?php /** For Images */ 
 					if($this->Image->isImage($m['FileStorage'])): ?>
@@ -72,8 +74,7 @@
 		<td>
 		<?php echo str_replace('Storage', '', $m['FileStorage']['model']); ?>
 		</td>
-		<td>
-		<?php echo  $m['FileStorage']['filename']; ?>
+		<td><a href="<?php echo $this->Image->imageUrl($m['FileStorage']); ?>" target="_blank"><?php echo  $m['FileStorage']['filename']; ?></a>
 		</td>
 		<td>
 		<?php echo  $this->Number->toReadableSize($m['FileStorage']['filesize']); ?>
