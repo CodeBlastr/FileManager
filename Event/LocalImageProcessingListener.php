@@ -145,7 +145,6 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
 				$filename = $Model->stripUuid($id);
 				$file = $record['file'];
 
-				debug($record);
 				$format = $record['extension'];
 				$sizes = Configure::read('Media.imageSizes.' . $record['model']);
 				$record['path'] = $Model->fsPath('images' . DS . $record['model'], $id);

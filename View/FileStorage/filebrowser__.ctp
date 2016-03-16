@@ -1,95 +1,32 @@
-<style>
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
-	color: #fff;
-	background-color: #85b200;
-	}
-#mediaBrowser .media-item {
-	height: 141px;
-	}
-</style>
+<link rel="stylesheet" href="/FileManager/css/app.css" />
+<script src="/FileManager/bower_components/modernizr/modernizr.js"></script>
 <div class="container">
 	<div class="row">
   		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
   			<h1>The Filebrowser</h1>
-  			<div id="mediaBrowser"><div class="row clearfix">
-	<div class="col-md-3">
-		<ul class="nav nav-pills nav-stacked">
-			<li><a href="#" class="show-upload">Upload</a></li>
-		</ul>
-		<hr>
-		<?php 
-		echo $this->Form->create('FileBrowser', array('type'=>'get', 'url'=>array('plugin'=>'file_manager', 'controller'=>'file_storage', 'action'=>'browser'))); ?>
-		<h5>Search by filename </h5>
-		<?php echo $this->Form->input('keyword', array('placeholder'=>'type keyword', 'label'=>false)); ?>
-		<h5>File Types to Show </h5>
-		<?php echo $this->Form->select('type', $this->File->filterTypes, array('empty'=>false)); ?>
-		<h5>Number to Show </h5>
-		<?php echo $this->Form->select('limit', $this->File->filterLimits, array('empty'=>false)); ?><br />
-		<?php echo $this->form->submit('APPLY FILTERS', array('class'=>'pull-right btn btn-success btn-sm'));?>
-		<?php echo $this->form->hidden('viewType', array('name'=>'viewType','value'=>$viewType));?>
-		<?php echo $this->form->end();?>
-	</div>
-	<div class="col-md-9">
-	<div class="media-container">
-		<?php 
-		echo $this->Form->create('FileStorage', array('url'=>array('plugin'=>'file_manager', 'controller'=>'file_storage', 'action'=>'bulkactions'), 'id'=>'ListViewBulkActionForm')); ?>
-		<!-- Nav tabs -->
-		<ul class="nav nav-tabs" role="tablist">
-			<li role="presentation" <?php if($viewType=='thumb') { ?>class="active"<?php } ?>><a href="<?php echo $this->Html->url(array('controller'=>'file_storage','action'=>'browser','?'=>array('viewType'=>'thumb'))); ?>">Thumbnail view</a></li> <!-- aria-controls="thumbnailview" role="tab" data-toggle="tab" -->
-			<li role="presentation" <?php if($viewType=='filelist') { ?>class="active"<?php } ?>><a href="<?php echo $this->Html->url(array('controller'=>'file_storage','action'=>'browser','?'=>array('viewType'=>'filelist'))); ?>">File list view</a></li>
-			<li role="presentation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-			<li role="presentation"><input type="checkbox" name="data[FileStorage][checkAll]" id="checkAll"> <label for="checkAll">Select All</label></li>
-			<li role="presentation"><?php echo $this->Form->select('FileStorage.bulkaction', array("Delete Selected"=>"Delete Selected"), array('empty'=>' - Choose Action - ', 'style'=>'display:inline;width:auto;')); ?><?php echo $this->Form->submit('GO',['div'=>['style'=>'display:inline']]); ?></li>
-		</ul><!-- aria-controls="filelistview" role="tab" data-toggle="tab" #filelistview-->
-	<br />
-		<!-- Tab panes -->
-  <div class="tab-content filesview">
-		<?php if($viewType=='thumb')	{ ?>
-    <div role="tabpanel" class="tab-pane active" id="thumbnailview">
-			<?php echo $this->Element('FileManager.thumbnailview', array('media', $media)); ?>
-		</div>
-		<?php } elseif($viewType=='filelist')	{ ?>
-    <div role="tabpanel" class="tab-pane active" id="filelistview">
-			<?php echo $this->Element('FileManager.filelistview', array('media', $media)); ?>
-		</div>
-		<?php } ?>
-  </div>
-	<?php echo $this->form->end();?>
-		<hr />
-		<?php
-		echo $this->Paginator->counter(array(
-   'format' => __('Page {:page} of {:pages}, showing {:current} files out of {:count} total, starting on file {:start}, ending on {:end}')
-   ));
-   ?> </p>
-   <div class="paging">
-   <?php
-    echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-    echo $this->Paginator->numbers(array('separator' => ''));
-    echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled')); ?>
-	</div>
-
-	</div>
-	<div class="upload-container" id="uploadPanel" style="display:none;">
-		<?php echo $this->Element('FileManager.upload_form'); ?>
-	</div>
-	</div>
-</div>
-<hr>
-
-<button type="button" class="show-upload pull-right btn btn-success btn-lg" data-dismiss="modal" aria-hidden="true">Insert</button>
-
-</div>
+  			<div class="content active" id="fileBrowser">
+						<div class="panel">
+							<ul id="browserList" class="small-block-grid-6 medium-block-grid-8 large-block-grid-12" data-equalizer>
+	  							<?php echo $this->Element('FileManager.media_list', array('media', $media)); ?>
+							</ul>
+						</div>
+					</div>
+					<div class="content" id="uploadPanel">
+						<div class="panel">
+							<?php echo $this->Element('FileManager.upload_form'); ?>
+						</div>
+					</div>
+			</div>
 		</div>
 	</div>
-
-<form id="deleteFileForm" style="display:none;" method="post">
-	<input type="hidden" name="_method" value="POST">
-	<input type="hidden" name="data[FileStorage][id]" id="fileStorageId" />
-</form>
 </div>
-
-<link href="/Media/css/mediaBrowswer.css" type="text/css" />
-
+<link href="/FileManager/css/mediaBrowser.css" type="text/css" />
+<script src="/FileManager/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/FileManager/bower_components/foundation/js/foundation.min.js"></script>
+<script src="/FileManager/bower_components/jquery-form/jquery.form.js"></script>
+<script src="/FileManager/bower_components/underscore/underscore.js"></script>
+<script src="/FileManager/bower_components/backbone/backbone.js"></script>
+<script src="/FileManager/js/app.js"></script>
 
 	<script type="text/javascript">
 		
@@ -109,33 +46,6 @@
 
 
 		$(document).ready(function() { 
-
-			$('.show-upload').on('click', function()	{
-				$('.media-container').toggle();
-				$('.upload-container').toggle();
-			})
-
-			$("#checkAll").click(function () {
-        if ($("#checkAll").is(':checked')) {
-					$("#thumbnailview input[type=checkbox], #filelistview input[type=checkbox]").each(function () {
-							$(this).prop("checked", true);
-					});
-				} else {
-					$("#thumbnailview input[type=checkbox], #filelistview input[type=checkbox]").each(function () {
-							$(this).prop("checked", false);
-					});
-        }
-    });
-
-		$("#ListViewBulkActionForm").on('submit', function () {
-			if(!$('#FileStorageBulkaction').val())	{
-				alert('Please choose an action to perform');$('#FileStorageBulkaction').focus();return false;
-			}
-			return confirm('Are you sure to do this action?');
-		});
-
-
-
 		    var options = { 
 		        target:        '#browserList',   // target element(s) to be updated with server response 
 		        beforeSubmit:  showRequest,  // pre-submit callback 
@@ -163,13 +73,19 @@
 				window.close();
 			});
 
-			$(".filesview").on('click', '.remove-media', function(e) {
+			$("#browserList").on('click', '.remove-media', function(e) {
 				if (confirm('Are you sure you want to delete this file?')) {
 					var id = $(this).data('id');
-					var action = "<?php echo $this->Html->url(array('plugin' => 'file_manager', 'controller' => 'file_storage', 'action' => 'delete')); ?>";
-					$('#deleteFileForm').attr('action', action);
-					$('#deleteFileForm #fileStorageId').val(id);
-					$('#deleteFileForm').submit();
+					var url = "<?php echo $this->Html->url(array('plugin' => 'file_storage', 'controller' => 'file_storage', 'action' => 'delete')); ?>";
+					$.post(
+						url+"/"+id,
+						function(html) {
+							console.log(html);
+							$('#browserList').html(html);
+						}
+					).fail(function() {
+					    alert( "error: File could not be deleted");
+					 });
 				}
 			});
 

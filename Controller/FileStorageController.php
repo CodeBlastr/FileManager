@@ -10,7 +10,7 @@ class FileStorageController extends FileManagerAppController {
 
 	public $uses = array('FileManager.FileStorage', 'FileManager.ImageStorage', 'FileManager.VideoStorage');
 
-	public $helpers = array('FileManager.Image');
+	public $helpers = array('FileManager.Image', 'Number');
 	
 	function beforeFilter()	{
 		//debug($this->plugins());
@@ -83,36 +83,55 @@ class FileStorageController extends FileManagerAppController {
 			$this->view = 'ckebrowser';
 		}
 
+		$viewType = 'thumb';
+
 		//Debugging
 		//$this->layout = false;
 		$this->view = 'filebrowser';
 
 		$params = array();
+		$params['order'] = array('FileStorage.filename' => 'ASC');
+		$params['limit'] = 20;
+
 		if(isset($this->request->query['type'])) {
 			switch($this->request->query['type']) {
 				case "all":
-					$params['conditions'] = array();
-					break;
+				break;
 				case "Image":
+				case "Audio":
 				case "Video":
+				case "Document":
 				case "File":
-					$params['conditions'] = array('model' => $this->request->query['type']."Storage");
-					break;
+					$params['conditions'][] = array('model' => $this->request->query['type']."Storage");
+				break;
 			}
+			$this->request->data['FileBrowser']['type'] = $this->request->query['type'];
+		}
+		if(isset($this->request->query['limit'])) {
+			$params['limit'] = $this->request->query['limit'];
+			$this->request->data['FileBrowser']['limit'] = $this->request->query['limit'];
 		}
 
-		$userId = CakeSession::read('Auth.User.id');
-		$params['conditions'][] = array('FileStorage.creator_id' => $userId);
-		$params['order'] = array('FileStorage.filename' => 'ASC');
+		if(isset($this->request->query['keyword']) && strlen(trim($this->request->query['keyword']))>=2) {
+			$params['conditions'][] = array('FileStorage.filename LIKE' => '%'.$this->request->query['keyword'].'%');
+			$this->request->data['FileBrowser']['keyword'] = $this->request->query['keyword'];
+		}
 
 		if($this->request->is('ajax')) {
 			$this->view = 'media-list';
 		}
-		$this->set('media', $this->FileStorage->find('all', $params));
+		if(isset($this->request->query['viewType'])) {
+			$viewType = $this->request->query['viewType'];
+		}
+		//debug($params);
+		$this->paginate = $params;
+		$this->set('media', $this->paginate());
+		$this->set(compact('viewType'));
 	}
 
-	public function delete($id) {
-		// if (!$this->request->is('get')) { why do we care if it's a get request
+	public function delete() {
+		 if ($this->request->is('post')) { //why do we care if it's a get request
+			$id = $this->request->data['FileStorage']['id'];
 			$media = $this->FileStorage->find('first', array('conditions' => array('FileStorage.id' => $id)));
 			if ($media) {
 				//Checks the model saved with the record.
@@ -132,10 +151,10 @@ class FileStorageController extends FileManagerAppController {
 				$this->response->statusCode(404);
 				$message = "File could not be found";
 			}
-		// } else {
-			// $message = "Bad Request";
-			// $this->response->statusCode(400);
-		// }
+		 } else {
+			 $message = "Bad Request";
+			 $this->response->statusCode(400);
+		 }
 
 		if ($this->request->is('ajax')) {
 			$this->layout = false;
@@ -147,8 +166,39 @@ class FileStorageController extends FileManagerAppController {
 		}
 	}
 
-	public function upload() {
+	public function bulkactions() {
+		if($this->request->is('post'))	{
+			switch($this->request->data['FileStorage']['bulkaction'])	{
+				case 'Delete Selected':
+					foreach($this->request->data['FileStorage']['file'] as $id)	{
+						$media = $this->FileStorage->find('first', array('conditions' => array('FileStorage.id' => $id)));
+						if ($media) {
+							//Checks the model saved with the record.
+							//falls back to base model if not a real object
+							$model = $media[$this->FileStorage->alias]['model'];
+							if(!is_object($this->$model)) {
+								$model = $this->_detectModelByFileType($media[$this->FileStorage->alias]['mime_type']);
+							}
+							$this->$model->id = $id;
+							if ($this->$model->delete()) {
+								$message = "Files Deleted!";	
+							} else {
+								$this->response->statusCode(500);
+								$message = "Files could not be deleted";
+							}
+						} else {
+							$this->response->statusCode(404);
+							$message = "Files could not be found";
+						}
+					}
+					break;
+			}
+		}
+		$this->Session->setFlash($message);
+		$this->redirect($this->referer()); // not sure this won't cause a problem (needed it for delete links)
+	}
 
+	public function upload() {
 		if (!$this->request->is('get')) {
 			$data = $this->request->data;
 //			debug($this->ImageStorage->alias);
@@ -195,6 +245,7 @@ class FileStorageController extends FileManagerAppController {
 				$this->browser();
 			} else {
 				$this->Session->setFlash($message);
+				$this->redirect($this->referer());
 			}
 		}
 	}

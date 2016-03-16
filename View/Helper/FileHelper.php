@@ -8,7 +8,22 @@ class FileHelper extends AppHelper {
 		'Url',
 		'FileManager.PhpThumb'
 	);
+	
+	public $filterTypes = [
+'All'=>'All',
+'Image'=>'Images',
+'Audio'=>'Audios',
+'Video'=>'Videos',
+'File'=>'Documents'];
 
+public $filterLimits = [
+'20'=>'20',
+'50'=>'50',
+'100'=>'100',
+'200'=>'200',
+'500'=>'500',
+'1000'=>'All'];
+	
 	public $options = array(
 		'width' => null, // was 300 but sometimes we just don't want any width or height attribute, so should only have value if specified
 		'height' => null, // was 300 but sometimes we just don't want any width or height attribute, so should only have value if specified
