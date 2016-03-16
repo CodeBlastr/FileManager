@@ -14,13 +14,13 @@ class FileStorageController extends FileManagerAppController {
 	
 	function beforeFilter()	{
 		//debug($this->plugins());
-		$plugins = CakePlugin::loaded();
+		/*$plugins = CakePlugin::loaded();
 		$fs = array_search('FileManager', $plugins);
 		if($fs !== false) {
 			CakePlugin::load(array(
 				'FileManager' => array('bootstrap' => true)
 			));
-		}
+		}*/
 		parent::beforeFilter();
 	}
 	/**
